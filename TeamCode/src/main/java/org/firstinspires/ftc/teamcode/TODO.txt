@@ -1,0 +1,11 @@
+1. setup the tuners in dash (the files) DONE
+
+2. turret file DONE
+    auto aim DONE
+
+3. actions
+    Turret DONE
+    Outtake DONE
+    Intake DONE
+
+4. Fix Auto Errors

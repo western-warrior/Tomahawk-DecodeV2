@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,38 +22,47 @@ public class Intake {
     public Intake(LinearOpMode mode) {
 
         intakeMotor = mode.hardwareMap.get(DcMotorEx.class, "intake");
-        //intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void intakeTime(double time) {
-        ElapsedTime timer = new ElapsedTime();
-
-        if (timer.seconds() < time) {
-            intakeMotor.setPower(1);
-        }
-        else if (timer.seconds() >= time) {
-            intakeMotor.setPower(0);
-            timer.reset();
-        }
-
-
+    public void intake() {
+        intakeMotor.setPower(1);
+    }
+    public void intakeReverse() {
+        intakeMotor.setPower(-0.5);
     }
 
-    public void intakeReverse(double time) {
-        ElapsedTime timer = new ElapsedTime();
-
-        if (timer.seconds() < time) {
-            intakeMotor.setPower(-0.5);
-        }
-        else if (timer.seconds() >= time) {
-            intakeMotor.setPower(0);
-            timer.reset();
-        }
+    public void intakeStop() {
+        intakeMotor.setPower(0);
     }
 
+    public Action intakeTime(double time) {
+        return new Action() {
+            ElapsedTime timer = new ElapsedTime();
+            boolean init = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                if (!init) {
+                    intake();
+                    timer.reset();
+                    init = true;
+                }
+                if (timer.seconds() < time) {
+                    return true;
+                }
+
+                else if (timer.seconds() >= time) {
+                    intakeStop();
+                    timer.reset();
+                    return false;
+                }
 
 
-
-
+                return false;
+            }
+        };
+    }
 
 }

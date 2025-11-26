@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +15,8 @@ public class Outtake {
     DcMotorEx flywheel2;
     MiniPID velocityController;
     public double pidOutput;
+    double error;
+    public double SETPOINT;
 
     public static double P = 0,I = 0, D = 0, F = 0;
 
@@ -57,4 +63,42 @@ public class Outtake {
         double hoodPos = 0;
         return hoodPos;
     }
+
+    public Action shoot_velocity(int vel) {
+
+        return new Action() {
+
+            private boolean init = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+                if (!init) {
+                    init = true;
+                }
+
+
+                SETPOINT = vel;
+                velocityController.setSetpoint(SETPOINT);
+                error = SETPOINT - Math.abs(getVelocity());
+
+                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
+
+                setPower(pidOutput);
+
+//                setVelocity(1650);
+
+
+                telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
+                telemetryPacket.put("ERROR", error);
+                telemetryPacket.put("SETPOINT", SETPOINT);
+
+
+                return error >= 50;
+            }
+
+        };
+    }
+
+
 }
