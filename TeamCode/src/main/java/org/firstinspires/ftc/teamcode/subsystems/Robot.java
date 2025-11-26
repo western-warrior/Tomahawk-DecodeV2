@@ -10,13 +10,13 @@ public class Robot {
     public DriveTrain driveTrain;
     public Intake intake;
     public Outtake outtake;
-
+    public Turret turret;
     public Robot(LinearOpMode mode) {
         
         //mode is erroring bc no code in subsystem classes
         driveTrain = new DriveTrain(mode);
         intake = new Intake(mode);
-        outtake = new org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret(mode);
+        turret = new Turret(mode);
         outtake = new Outtake(mode);
 
     }
