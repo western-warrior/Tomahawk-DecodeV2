@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
+
 @Autonomous
 @Config
 public class RedFarAuto extends LinearOpMode implements FIELD {
@@ -103,8 +105,7 @@ public class RedFarAuto extends LinearOpMode implements FIELD {
                 )
             )
         );
-
-
+        PoseStorage.currentPose = robot.pinpoint.getPose();
     }
 
 }

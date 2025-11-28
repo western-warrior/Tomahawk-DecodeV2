@@ -41,14 +41,15 @@ public class GazelleFSM {
 
         robot.turret.autoAim(pinpoint.getPose());
 
+
         switch (gazelleState){
             case BASE_STATE:
                 robot.intake.intakeStop();
                 robot.intake.blockerClose();
                 robot.outtake.shootStop();
-                if (true /*right trigger*/){
+                if (controls.intake.value()){
                     gazelleState = GazelleState.INTAKING;
-                } else if (true /*left trigger*/){
+                } else if (controls.intakeReverse.value()){
                     gazelleState = GazelleState.INTAKING;
                 }
 
@@ -57,13 +58,13 @@ public class GazelleFSM {
             case INTAKING:
 
                 intake.blockerClose();
-                if (true /*right trigger*/) {
+                if (controls.intake.value()) {
                     intake.intake();
-                } else if (true /*left trigger*/){
+                } else if (controls.intakeReverse.value()){
                     intake.intakeReverse();
-                } else if (true /*left bumper*/){
+                } else if (controls.servoBlocker.value()){
                     gazelleState = GazelleState.TRANSFERRING;
-                } else if (true /*click left joy stick*/){
+                } else if (controls.flywheel.value()){
                     gazelleState = GazelleState.SPINUP;
                 } else {
                     intake.intakeStop();
@@ -72,13 +73,13 @@ public class GazelleFSM {
                 break;
             case SPINUP:
                 outtake.shootVelocity(pinpoint.getPose().position.x, pinpoint.getPose().position.y);
-                if (true /*outtake done spinning, left bumper*/) {
+                if (controls.servoBlocker.value()) {
                     gazelleState= GazelleState.TRANSFERRING;
-                } else if (true /*right trigger*/){
+                } else if (controls.intake.value()){
                     gazelleState = GazelleState.INTAKING;
-                } else if (true /*left trigger*/){
+                } else if (controls.intakeReverse.value()){
                     gazelleState = GazelleState.INTAKING;
-                } else if(true /*boolean lft joystick*/){
+                } else if(controls.flywheel.value()){
                     gazelleState = GazelleState.BASE_STATE;
                 }
                 //flywheel on
@@ -86,11 +87,11 @@ public class GazelleFSM {
                 break;
             case TRANSFERRING:
                 intake.blockerOpen();
-                if (true /*hold right trigger*/){
+                if (controls.intake.value()){
                     intake.intake();
-                } else if (true /*hold left trigger*/){
+                } else if (controls.intakeReverse.value()){
                     gazelleState=GazelleState.INTAKING;
-                } else if (true /*left joystick click*/){
+                } else if (controls.flywheel.value()){
                     gazelleState = GazelleState.SPINUP;
                 }
                 else {

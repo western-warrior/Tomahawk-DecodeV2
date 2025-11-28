@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
+import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 
 @Autonomous
 public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
@@ -196,10 +197,7 @@ public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
                 )
 
         );
-
-
-
-
+        PoseStorage.currentPose = robot.pinpoint.getPose();
     }
 
 }

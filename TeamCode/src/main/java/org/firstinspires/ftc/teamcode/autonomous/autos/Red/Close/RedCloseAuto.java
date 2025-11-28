@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
 import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 
 @Autonomous
 @Config
@@ -155,10 +156,7 @@ public class RedCloseAuto extends LinearOpMode implements FieldConstants {
                 )
 
         );
-
-
-
-
+        PoseStorage.currentPose = robot.pinpoint.getPose();
     }
 
 }

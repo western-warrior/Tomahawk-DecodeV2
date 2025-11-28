@@ -24,16 +24,16 @@ public class GamepadMappings {
     public static double turn = 0.0;
 
     //=============== INTAKE ===============
-    public static Toggle intake;
-    public static Toggle intakeReverse;
-    public static Toggle servoBlocker;
-    public static Toggle transfer;
-    public static Toggle transferReverse;
+    public Toggle intake;
+    public Toggle intakeReverse;
+    public Toggle servoBlocker;
+    public Toggle transfer;
+    public Toggle transferReverse;
 
 
     //=============== OUTTAKE ===============
-    public static Toggle flywheel;
-    public static Toggle autoAim;
+    public Toggle flywheel;
+    public Toggle autoAim;
 
 
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
@@ -60,8 +60,10 @@ public class GamepadMappings {
 
     public void intakeUpdate() {
         intake.update(gamepad1.right_trigger > 0.5);
-        intakeReverse.update(gamepad1.left_trigger > 0.5);
         transfer.update(gamepad1.right_trigger > 0.5);
+    }
+    public void intakeReverseUpdate() {
+        intakeReverse.update(gamepad1.left_trigger > 0.5);
         transferReverse.update(gamepad1.left_trigger > 0.5);
     }
     public void outtakeUpdate() {
