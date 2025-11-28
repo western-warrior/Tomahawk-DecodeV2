@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeConstants.BLOCKER_CLOSED;
+import static org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeConstants.BLOCKER_OPEN;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -34,6 +37,12 @@ public class Intake {
 
     public void intakeStop() {
         intakeMotor.setPower(0);
+    }
+    public void blockerOpen (){
+        blocker.setPosition(BLOCKER_OPEN);
+    }
+    public void blockerClose (){
+        blocker.setPosition(BLOCKER_CLOSED);
     }
 
     public Action intakeTimeAction(double time) {

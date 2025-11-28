@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pid.MiniPID;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.pid.MiniPID;
 public class Outtake {
     DcMotorEx flywheel1;
     DcMotorEx flywheel2;
+    Servo hood;
     MiniPID velocityController;
     public double pidOutput;
     double error;
@@ -25,6 +27,7 @@ public class Outtake {
     public Outtake(LinearOpMode mode) {
         flywheel1 = mode.hardwareMap.get(DcMotorEx.class, "flywheel1");
         flywheel2 = mode.hardwareMap.get(DcMotorEx.class, "flywheel2");
+        hood = mode.hardwareMap.get(Servo.class, "hood");
 
         flywheel1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flywheel2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -45,8 +48,16 @@ public class Outtake {
         flywheel2.setPower(power);
     }
 
-    public void shootVelocity(int velocity, double Rx, double Ry, double hoodPos) {
-        velocity = veloCalc (Rx, Ry, hoodPos);
+
+    public void shootVelocity(double Rx, double Ry) {
+        // calculate hood first
+        double hoodPos = hoodCalc(Rx, Ry);  // hoodCalc just returns a value
+        hood.setPosition(hoodPos);          // then apply it to the servo
+
+        // calculate velocity based on hood
+        int velocity = veloCalc(Rx, Ry, hoodPos);  // use hoodPos as input
+
+        // apply PID to reach velocity
         velocityController.setSetpoint(velocity);
         pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
         setPower(pidOutput);
@@ -55,14 +66,13 @@ public class Outtake {
         flywheel1.setPower(0);
         flywheel2.setPower(0);
     }
-    public int veloCalc (double Rx, double Ry, double hoodPos){
-        hoodPos = hoodCalc(Rx, Ry);
-        int velocity = 0;
+    public int veloCalc(double Rx, double Ry, double hoodPos) {
+        int velocity = 0/* formula that depends on hoodPos, Rx, Ry */;
         return velocity;
     }
-    public double hoodCalc(double Rx, double Ry){
-        double hoodPos = 0;
-        return hoodPos;
+    public double hoodCalc(double Rx, double Ry) {
+        double hoodPos = 0/*formula here */;
+        return hoodPos;  
     }
 
     public Action stopAction() {

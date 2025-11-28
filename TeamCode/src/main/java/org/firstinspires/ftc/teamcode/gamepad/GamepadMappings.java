@@ -8,6 +8,13 @@ public class GamepadMappings {
     private Gamepad gamepad2;
 
     //Write mappings here
+    //Intake -
+    //Intake Reverse -
+    //Servo Blocker -
+    //Transfer -
+    //Transfer Reverse -
+    //Flywheel -
+    //Auto Aim Toggle -
 
 
 

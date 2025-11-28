@@ -64,22 +64,20 @@ public class DriveTrain {
         double brPower = 0.0;
         switch (s) {
             case ROBOTCENTRIC:
-                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                flPower = (y + x + rx) / denominator;
-                frPower = (y - x - rx) / denominator;
-                blPower = (y - x + rx) / denominator;
-                brPower = (y + x - rx) / denominator;
+                flPower = (y + x + rx) ;
+                frPower = (y - x - rx) ;
+                blPower = (y - x + rx) ;
+                brPower = (y + x - rx) ;
                 break;
 
             case FIELDCENTRIC:
                 double botHeading = imu.getYaw(AngleUnit.RADIANS);
                 double rotX = (x * Math.cos(-botHeading) - y * Math.sin(-botHeading)) * 1.1;
                 double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-                denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-                flPower = (rotY + rotX + rx) / denominator;
-                frPower = (rotY - rotX - rx) / denominator;
-                blPower = (rotY - rotX + rx) / denominator;
-                brPower = (rotY + rotX - rx) / denominator;
+                flPower = (rotY + rotX + rx) ;
+                frPower = (rotY - rotX - rx) ;
+                blPower = (rotY - rotX + rx) ;
+                brPower = (rotY + rotX - rx) ;
                 break;
         }
 

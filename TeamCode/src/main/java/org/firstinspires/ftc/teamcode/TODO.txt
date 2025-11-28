@@ -1,11 +1,9 @@
-1. setup the tuners in dash (the files) DONE
+get pos from auto
 
-2. turret file DONE
-    auto aim DONE
+get pos in the update function DONE
 
-3. actions
-    Turret DONE
-    Outtake DONE
-    Intake DONE
+gamepad mappings DONE
 
-4. Fix Auto Errors
+turret update function
+
+all the formulas
