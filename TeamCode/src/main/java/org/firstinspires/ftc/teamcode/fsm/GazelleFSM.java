@@ -76,7 +76,7 @@ public class GazelleFSM {
                     gazelleState = GazelleState.INTAKING;
                 } else if (controls.intakeReverse.locked()){
                     gazelleState = GazelleState.INTAKING;
-                } else if(controls.flywheel.value()){
+                } else if(!controls.flywheel.value()){
                     gazelleState = GazelleState.BASE_STATE;
                 }
                 //flywheel on
