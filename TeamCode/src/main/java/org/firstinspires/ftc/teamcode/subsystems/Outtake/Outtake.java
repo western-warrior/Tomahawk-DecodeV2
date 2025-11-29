@@ -4,6 +4,8 @@ import static org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage.side
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -24,13 +26,12 @@ public class Outtake {
     public double pidOutput;
     double error;
     public double SETPOINT;
+    MultipleTelemetry telemetry;
 
     public static double P = 0.0025, I = 0, D = 0, F = 0.00035;
     public static double K = 0.0035; // saturation rate for the hood function, needs to be tuned
     double MIN_HOOD = 20; // need to determine this, btw these are all in degrees
     double MAX_HOOD = 60; // need to determine this
-
-
 
     public Outtake(HardwareMap hardwareMap) {
         flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
@@ -47,6 +48,7 @@ public class Outtake {
         flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         velocityController = new MiniPID(P, I, D, F);
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
     }
     public double getVelocity() {
         return flywheel1.getVelocity();
@@ -55,7 +57,6 @@ public class Outtake {
         flywheel1.setPower(power);
         flywheel2.setPower(power);
     }
-
 
     public void autoVelocity(double Rx, double Ry) {
         // calculate hood first
@@ -68,12 +69,18 @@ public class Outtake {
         // apply PID to reach velocity
         velocityController.setSetpoint(velocity);
         pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
+        telemetry.addData("PID Output", pidOutput);
+        telemetry.addData("Setpoint", velocity);
+        telemetry.addData("Error", velocity - (flywheel1.getVelocity()+ flywheel2.getVelocity())/2);
         setPower(pidOutput);
     }
 
     public void shootVelocity(int velocity) {
         velocityController.setSetpoint(velocity);
         pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
+        telemetry.addData("PID Output", pidOutput);
+        telemetry.addData("Setpoint", velocity);
+        telemetry.addData("Error", velocity - (flywheel1.getVelocity()+ flywheel2.getVelocity())/2);
         setPower(pidOutput);
     }
     public void shootStop() {

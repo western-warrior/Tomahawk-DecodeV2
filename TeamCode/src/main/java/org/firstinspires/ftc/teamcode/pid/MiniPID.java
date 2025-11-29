@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pid;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 /*
  * Small, easy to use PID implementation with advanced controller capability.<br>
