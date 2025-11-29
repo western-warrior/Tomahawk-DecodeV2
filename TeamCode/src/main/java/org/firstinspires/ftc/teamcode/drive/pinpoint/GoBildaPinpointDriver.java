@@ -78,7 +78,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
 
     @Override
     public Manufacturer getManufacturer() {
-        return Manufacturer.Other;
+        return Manufacturer.GoBilda;
     }
 
     @Override
