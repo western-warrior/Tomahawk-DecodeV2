@@ -27,8 +27,8 @@ public class Turret {
     private double lineY;
     private Rotation2d heading;
     private int turnAngle;
-    public static double turretOffsetX = 0;
-    public static double turretOffsetY = 0;
+    public static double turretOffsetX = -1.34;
+    public static double turretOffsetY = 1.05;
     public static int redClose = -45, blueClose = 45, redFar = 0, blueFar = 0;
     public int pos;
     public double error;
@@ -72,7 +72,7 @@ public class Turret {
 
     }
     public int degToTicks(double deg) {
-        return (int) Math.round(deg * (537.7/360) * 3);
+        return (int) (TICKS_PER_DEGREE*deg);
     }
 
     public double getVelocity() {
@@ -86,9 +86,9 @@ public class Turret {
 
     public double angleCalc(Pose2d pose) {
         if (side.equals(PoseStorage.SIDE.BLUE)) {
-            angle = Math.atan2(72 - pose.position.x, 72 - pose.position.y) * 360 / Math.PI;
+            angle = Math.atan2(72 - pose.position.x + turretOffsetX, 72 - pose.position.y + turretOffsetY) * 360 / Math.PI;
         } else if (side.equals(PoseStorage.SIDE.RED)) {
-            angle = Math.atan2(-72 - pose.position.x, -72 - pose.position.y) * 360 / Math.PI;
+            angle = Math.atan2(-72 - pose.position.x + turretOffsetX, -72 - pose.position.y + turretOffsetY) * 360 / Math.PI;
         }
         angle -= pose.heading.log() * 360 / Math.PI;
         return angle;
