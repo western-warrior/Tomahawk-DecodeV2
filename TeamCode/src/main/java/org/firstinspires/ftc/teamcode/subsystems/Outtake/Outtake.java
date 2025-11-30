@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 import org.firstinspires.ftc.teamcode.pid.MiniPID;
 
 public class Outtake {
-    DcMotorEx flywheel1;
-    DcMotorEx flywheel2;
+    public DcMotorEx motor1;
+    public DcMotorEx motor2;
     Servo hood;
     MiniPID velocityController;
     public double pidOutput;
@@ -34,28 +34,33 @@ public class Outtake {
     double MAX_HOOD = 60; // need to determine this
 
     public Outtake(HardwareMap hardwareMap) {
-        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
-        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
+        motor1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
+        motor2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
         hood = hardwareMap.get(Servo.class, "hood");
 
-        flywheel1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flywheel2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        flywheel1.setDirection(DcMotorEx.Direction.FORWARD);
-        flywheel2.setDirection(DcMotorEx.Direction.REVERSE);
+        motor1.setDirection(DcMotorEx.Direction.FORWARD);
+        motor2.setDirection(DcMotorEx.Direction.REVERSE);
 
-        flywheel1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flywheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         velocityController = new MiniPID(P, I, D, F);
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
     }
     public double getVelocity() {
-        return flywheel1.getVelocity();
+        return motor1.getVelocity();
     }
     public void setPower(double power) {
-        flywheel1.setPower(power);
-        flywheel2.setPower(power);
+        motor1.setPower(power);
+        motor2.setPower(power);
+    }
+
+    public void setVelocity(double velocity) {
+        motor1.setVelocity(velocity);
+        motor2.setVelocity(velocity);
     }
 
     public void autoVelocity(double Rx, double Ry) {
@@ -71,7 +76,7 @@ public class Outtake {
         pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
 //        telemetry.addData("PID Output", pidOutput);
 //        telemetry.addData("Setpoint", velocity);
-//        telemetry.addData("Error", velocity - (flywheel1.getVelocity()+ flywheel2.getVelocity())/2);
+//        telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
         setPower(pidOutput);
     }
 
@@ -80,12 +85,12 @@ public class Outtake {
         pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
 //        telemetry.addData("PID Output", pidOutput);
 //        telemetry.addData("Setpoint", velocity);
-//        telemetry.addData("Error", velocity - (flywheel1.getVelocity()+ flywheel2.getVelocity())/2);
+//        telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
         setPower(pidOutput);
     }
     public void shootStop() {
-        flywheel1.setPower(0);
-        flywheel2.setPower(0);
+        motor1.setPower(0);
+        motor2.setPower(0);
     }
     public int veloCalc(double Rx, double Ry, double hoodPos) {
         int velocity = 5500; /* formula that depends on hoodPos, Rx, Ry */
@@ -113,8 +118,8 @@ public class Outtake {
         return new Action() {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                flywheel1.setPower(0);
-                flywheel2.setPower(0);
+                motor1.setPower(0);
+                motor2.setPower(0);
                 return false;
             }
         };
@@ -220,12 +225,12 @@ public class Outtake {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (timer.seconds() < time) {
-                    flywheel1.setPower(-0.5);
-                    flywheel2.setPower(-0.5);
+                    motor1.setPower(-0.5);
+                    motor2.setPower(-0.5);
                 }
                 else {
-                    flywheel1.setPower(0);
-                    flywheel2.setPower(0);
+                    motor1.setPower(0);
+                    motor2.setPower(0);
                 }
                 return false;
             }
