@@ -61,7 +61,7 @@ public class GazelleFSM {
                     intake.intakeReverse();
                 } else if (controls.servoBlocker.value()){
                     gazelleState = GazelleState.TRANSFERRING;
-                } else if (controls.flywheel.value()){
+                } else if (controls.flywheelClose.value()){
                     gazelleState = GazelleState.SPINUP;
                 } else {
                     intake.intakeStop();
@@ -76,7 +76,7 @@ public class GazelleFSM {
                     gazelleState = GazelleState.INTAKING;
                 } else if (controls.intakeReverse.locked()){
                     gazelleState = GazelleState.INTAKING;
-                } else if(!controls.flywheel.value()){
+                } else if(!controls.flywheelClose.value()){
                     gazelleState = GazelleState.BASE_STATE;
                 }
                 //flywheel on
@@ -88,7 +88,7 @@ public class GazelleFSM {
                     intake.intake();
                 } else if (controls.intakeReverse.locked()){
                     gazelleState=GazelleState.INTAKING;
-                } else if (controls.flywheel.value()){
+                } else if (controls.flywheelClose.value()){
                     gazelleState = GazelleState.SPINUP;
                 }
                 else {

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.pid.MiniPID;
+import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 
 @TeleOp
@@ -17,14 +18,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 public class FlywheelTuner extends LinearOpMode {
 
     public static double FAR_VELOCITY = 2380;
-    public static double CLOSE_VELOCITY = 1600;
+    public static double CLOSE_VELOCITY = 1000;
 
-    public static double P = 1, I = 0, D = 0, F = 10;
+    public static double P = 578, I = 0, D = 0, F = 19.5;
 
     Outtake flywheel;
+    Intake intake;
 
     public void runOpMode() {
         flywheel = new Outtake(hardwareMap);
+        intake = new Intake(hardwareMap);
 //        MiniPID controller = new MiniPID(P, I, D, V);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -39,7 +42,7 @@ public class FlywheelTuner extends LinearOpMode {
 //            double pidOutput = controller.getOutput(currentVelocity, CLOSE_VELOCITY);
 
 //            pidOutput = Math.max(-1, Math.min(1, pidOutput));
-
+            intake.intake();
 
             telemetry.addData("Error", error);
             telemetry.addData("Velocity", currentVelocity);
