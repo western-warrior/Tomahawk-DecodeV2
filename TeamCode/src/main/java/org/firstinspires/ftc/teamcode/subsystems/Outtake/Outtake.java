@@ -28,7 +28,7 @@ public class Outtake {
     public double SETPOINT;
     MultipleTelemetry telemetry;
 
-    public static double P = 0.0025, I = 0, D = 0, F = 0.00035;
+    public static double P = 578, I = 0, D = 0, F = 19.5;
     public static double K = 0.0035; // saturation rate for the hood function, needs to be tuned
     double MIN_HOOD = 20; // need to determine this, btw these are all in degrees
     double MAX_HOOD = 60; // need to determine this

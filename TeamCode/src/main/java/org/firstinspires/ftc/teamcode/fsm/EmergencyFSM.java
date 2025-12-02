@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.drive.localizers.PinpointLocalizer;
 import org.firstinspires.ftc.teamcode.gamepad.GamepadMappings;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake.OuttakeConstants;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
@@ -37,8 +38,15 @@ public class EmergencyFSM {
     public void gazelleUpdate() {
         controls.update();
         robot.driveTrain.update();
-        if (controls.flywheel.value()) outtake.shootVelocity(1770);
-        if (!controls.flywheel.value()) outtake.shootVelocity(0);
+        if (controls.flywheelClose.value()) {
+            outtake.shootVelocity(OuttakeConstants.CLOSE_VELOCITY);
+        }
+        else if (controls.flywheelFar.value()) {
+            outtake.shootVelocity(OuttakeConstants.FAR_VELOCITY);
+        }
+        else if (controls.flywheelOff.value()) {
+            outtake.shootVelocity(OuttakeConstants.OFF_VELOCITY);
+        }
         switch (gazelleState) {
             case BASE_STATE:
                 intake.intakeStop();

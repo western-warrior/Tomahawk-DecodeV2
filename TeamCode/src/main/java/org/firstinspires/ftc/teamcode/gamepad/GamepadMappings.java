@@ -32,7 +32,9 @@ public class GamepadMappings {
 
 
     //=============== OUTTAKE ===============
-    public Toggle flywheel;
+    public Toggle flywheelClose;
+    public Toggle flywheelFar;
+    public Toggle flywheelOff;
     public Toggle autoAim;
 
 
@@ -48,7 +50,9 @@ public class GamepadMappings {
         transferReverse = new Toggle(false);
 
         //=============== OUTTAKE ===============
-        flywheel = new Toggle(false);
+        flywheelClose = new Toggle(false);
+        flywheelFar = new Toggle(false);
+        flywheelOff = new Toggle(false);
         autoAim = new Toggle(false);
     }
 
@@ -67,7 +71,9 @@ public class GamepadMappings {
         transferReverse.update(gamepad1.left_trigger > 0.5);
     }
     public void outtakeUpdate() {
-        flywheel.update(gamepad2.left_stick_button);
+        flywheelClose.update(gamepad2.a);
+        flywheelFar.update(gamepad2.y);
+        flywheelOff.update(gamepad2.b);
         autoAim.update(gamepad1.dpad_up);
     }
 
