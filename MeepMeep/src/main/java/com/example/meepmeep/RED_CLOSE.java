@@ -30,6 +30,7 @@ public class RED_CLOSE {
             .build();
 
         Action artifact1 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
+            .setTangent(Math.PI)
             .strafeToLinearHeading(FieldConstants.PPG_RED_ARTIFACT, FieldConstants.RED_ARTIFACT_ANGLE)
 
             .build();

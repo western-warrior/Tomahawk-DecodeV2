@@ -82,6 +82,7 @@ public class Intake {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (!init) {
                     intake();
+                    transferIn(1);
                     timer.reset();
                     init = true;
                 }
@@ -89,6 +90,7 @@ public class Intake {
                     return true;
                 } else {
                     intakeStop();
+                    transferStop();
                     return false;
                 }
             }
@@ -104,6 +106,7 @@ public class Intake {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (!init) {
                     intakeReverse();
+                    transferOut(1);
                     timer.reset();
                     init = true;
                 }
@@ -111,6 +114,7 @@ public class Intake {
                     return true;
                 } else {
                     intakeStop();
+                    transferStop();
                     return false;
                 }
             }

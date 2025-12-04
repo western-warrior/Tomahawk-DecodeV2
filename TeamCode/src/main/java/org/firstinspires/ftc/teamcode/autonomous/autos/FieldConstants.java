@@ -12,7 +12,7 @@ public interface FieldConstants {
     //-------------------------------Angles------------------------------------------
 
     //RED
-    double RED_CLOSE_ANGLE = Math.toRadians(-90);
+    double RED_CLOSE_ANGLE = Math.toRadians(-47);
     double RED_FAR_ANGLE = Math.toRadians(90);
     double RED_ARTIFACT_ANGLE = Math.toRadians(270);
 
@@ -35,14 +35,14 @@ public interface FieldConstants {
 //    Vector2d PGP_RED_ARTIFACT = new Vector2d(-12, -25);
 //    Vector2d PPG_RED_ARTIFACT = new Vector2d(12, -54);
 
-    Vector2d GPP_RED_ARTIFACT = new Vector2d(-36, -24);
-    Vector2d PGP_RED_ARTIFACT = new Vector2d(-12, -24);
-    Vector2d PPG_RED_ARTIFACT = new Vector2d(3, -56);
+    Vector2d GPP_RED_ARTIFACT = new Vector2d(-40, -24);
+    Vector2d PGP_RED_ARTIFACT = new Vector2d(-20, -24);
+    Vector2d PPG_RED_ARTIFACT = new Vector2d(0, -56);
     Vector2d HP_RED_ARTIFACT = new Vector2d(-60,-58);
 
 
     // ======RED Shooting Locations======
-    Vector2d RED_CLOSE_SHOOT = new Vector2d(12, -10);
+    Vector2d RED_CLOSE_SHOOT = new Vector2d(17, -14);
     Pose2d RED_FAR_SHOOT = new Pose2d(-61.25, -5, Math.toRadians(-90));
 
     // ======BLUE ARTIFACTS======
@@ -71,5 +71,4 @@ public interface FieldConstants {
     Pose2d BLUE_CLOSE_START = new Pose2d(57, 45, Math.toRadians(323));
 
     Pose2d BLUE_GOAL_START = new Pose2d(-47.5, 51.5,  Math.toRadians(323));
-
 }

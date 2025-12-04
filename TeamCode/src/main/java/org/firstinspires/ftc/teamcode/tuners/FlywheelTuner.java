@@ -17,10 +17,10 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 @Config
 public class FlywheelTuner extends LinearOpMode {
 
-    public static double FAR_VELOCITY = 2380;
-    public static double CLOSE_VELOCITY = 1000;
+    public static double FAR_VELOCITY = 1500;
+    public static double CLOSE_VELOCITY = 1200;
 
-    public static double P = 0, I = 0, D = 0, F = 19.5;
+    public static double P = 500, I = 0, D = 0, F = 19.5;
 
     Outtake flywheel;
     Intake intake;
@@ -43,6 +43,7 @@ public class FlywheelTuner extends LinearOpMode {
 
 //            pidOutput = Math.max(-1, Math.min(1, pidOutput));
             intake.intake();
+            intake.transferIn(1);
 
             telemetry.addData("Error", error);
             telemetry.addData("Velocity", currentVelocity);

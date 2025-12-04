@@ -39,14 +39,12 @@
 
          Action artifact1 = drive.actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
              .strafeToLinearHeading(FieldConstants.PPG_RED_ARTIFACT, FieldConstants.RED_ARTIFACT_ANGLE)
-
              .build();
 
          Action artifact1_return = drive.actionBuilder(new Pose2d(FieldConstants.PPG_RED_ARTIFACT.x, FieldConstants.PPG_RED_ARTIFACT.y, FieldConstants.RED_ARTIFACT_ANGLE))
 
              .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
              .waitSeconds(0.85)
-
              .build();
 
 
@@ -59,14 +57,10 @@
 
              .build();
 
-         Action artifact2_return = drive.actionBuilder(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST+10, FieldConstants.RED_ARTIFACT_ANGLE))
+         Action artifact2_return = drive.actionBuilder(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y+10, FieldConstants.RED_ARTIFACT_ANGLE))
 
-             .strafeTo(FieldConstants.PGP_RED_ARTIFACT)
-             .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE-Math.toRadians(5-2))
-
-//                            .splineToLinearHeading(new Pose2d(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE))
-             .setReversed(true)
-             .splineToConstantHeading(FieldConstants.RED_CLOSE_SHOOT, 0)
+             //                .setReversed(true)
+             .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
 
              .build();
 
@@ -104,7 +98,7 @@
                          botActions.preload_parallel_red(preload),
 
                          new ParallelAction(
- //                                subsystems.outtake.shoot_close_time(SHOOTER_TIME),
+                                 robot.outtake.shootVelocityAction(1150),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
 
                          ),
@@ -112,9 +106,10 @@
 
                          new ParallelAction(
                                  artifact1,
+                                 robot.outtake.shootVelocityAction(1150),
+                                 robot.intake.intakeTimeAction(INTAKE_WAIT_TIME)
+//                                 robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME)
 
-                                 robot.intake.intakeTimeAction(INTAKE_WAIT_TIME),
-                                 robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME)
                          ),
 
                          robot.intake.stop(),
@@ -122,13 +117,13 @@
 
                          new ParallelAction(
                                  artifact1_return,
- //                                subsystems.intake.intakeReverse(0.5),
+                                 robot.intake.intakeReverseTimeAction(0.5),
                                  robot.outtake.reverseTimeAction(1)
                          ),
                          robot.outtake.stopAction(),
 
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
+                                 robot.outtake.shootVelocityAction(1150),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
@@ -145,12 +140,12 @@
 
                          new ParallelAction(
                                  artifact2_return,
- //                                subsystems.intake.intakeReverse(0.5),
+                                 robot.intake.intakeReverseTimeAction(0.5),
                                  robot.outtake.reverseTimeAction(1)
                          ),
 
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
+                                 robot.outtake.shootVelocityAction(1150),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
@@ -168,7 +163,7 @@
                                  robot.outtake.reverseTimeAction(1)
                          ),
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(1000),
+                                 robot.outtake.shootVelocityAction(1150),
                                  robot.intake.intakeTimeAction(5)
                          )
 
@@ -177,7 +172,6 @@
 
          );
 //         PoseStorage.currentPose = robot.pinpoint.getPose();
-         PoseStorage.currentPose = robot.pinpoint.getPose();
      }
 
  }
