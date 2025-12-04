@@ -21,7 +21,7 @@ public class EmergencyFSM {
     private Telemetry telemetry;
     private PinpointLocalizer pinpoint;
     private GazelleState gazelleState;
-
+    private Intake transfer;
     // Constructor: only pass initialized Robot
     public EmergencyFSM(Telemetry telemetry, GamepadMappings controls, Robot robot) {
         this.robot = robot;
@@ -31,7 +31,7 @@ public class EmergencyFSM {
         this.pinpoint = robot.pinpoint;
         this.controls = controls;
         this.telemetry = telemetry;
-
+        this.transfer = robot.transfer;
         this.gazelleState = GazelleState.BASE_STATE;
     }
 
@@ -80,10 +80,10 @@ public class EmergencyFSM {
                 break;
 */
             case TRANSFERRING:
-                intake.transferIn(1);
+                transfer.setPower(1);
                 intake.intake();
-                if (controls.intake.locked()) intake.intake();
-                else if (controls.intakeReverse.locked()) gazelleState = GazelleState.INTAKING;
+                //if (controls.intake.locked()) intake.intake();
+                //else if (controls.intakeReverse.locked()) gazelleState = GazelleState.INTAKING;
 //                else intake.intakeStop();
                 if (!controls.transfer.locked()) gazelleState = GazelleState.INTAKING; intake.transferStop();
                 break;

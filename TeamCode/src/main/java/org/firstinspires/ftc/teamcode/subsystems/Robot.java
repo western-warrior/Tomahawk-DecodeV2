@@ -19,6 +19,7 @@ public class Robot {
     public DriveTrain driveTrain;
     public Intake intake;
     public Outtake outtake;
+    public Intake transfer;
 //    public Turret turret;
     public PinpointLocalizer pinpoint;
     public Robot(HardwareMap hwMap, GamepadMappings controls) {
@@ -27,6 +28,7 @@ public class Robot {
         intake = new Intake(hwMap);
 //        turret = new Turret(hwMap);
         outtake = new Outtake(hwMap);
+        transfer = new Intake(hwMap);
         pinpoint = new PinpointLocalizer(hwMap, 0.0025, PoseStorage.currentPose);
 
     }

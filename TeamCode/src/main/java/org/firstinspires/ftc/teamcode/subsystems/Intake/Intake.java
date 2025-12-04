@@ -104,4 +104,12 @@ public class Intake {
             }
         };
     }
+
+    public double getPower() {
+        return transfer.getPower();
+    }
+
+    public void setPower(int i) {
+        transfer.setPower(i);
+    }
 }

@@ -37,6 +37,7 @@ public class EmergencyTeleOp extends LinearOpMode {
 
             // Optional telemetry
             telemetry.addData("FSM State", fsm.getState());
+            telemetry.addData("Transfer speed", robot.transfer.getPower());
             telemetry.update();
         }
     }
