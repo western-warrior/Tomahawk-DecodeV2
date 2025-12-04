@@ -164,11 +164,11 @@
                          robot.intake.stop(),
                          new ParallelAction(
                                  artifact3_return,
-                                 robot.intake.intakeReverse(0.5),
+                                 robot.intake.intakeReverseTimeAction(0.5),
                                  robot.outtake.reverseTimeAction(1)
                          ),
                          new SequentialAction(
-                                 robot.outtake.shoot_close(),
+                                 robot.outtake.shootVelocityAction(1000),
                                  robot.intake.intakeTimeAction(5)
                          )
 

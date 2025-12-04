@@ -95,7 +95,7 @@ public class Intake {
         };
     }
 
-    public Action intakeTimeAction(double time) {
+    public Action intakeReverseTimeAction(double time) {
         return new Action() {
             final ElapsedTime timer = new ElapsedTime();
             boolean init = false;
@@ -103,7 +103,7 @@ public class Intake {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (!init) {
-                    intake();
+                    intakeReverse();
                     timer.reset();
                     init = true;
                 }
