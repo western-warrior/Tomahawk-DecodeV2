@@ -6,6 +6,7 @@
  import com.acmerobotics.roadrunner.Pose2d;
  import com.acmerobotics.roadrunner.SequentialAction;
  import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+ import com.acmerobotics.roadrunner.Vector2d;
  import com.acmerobotics.roadrunner.ftc.Actions;
  import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,7 +24,7 @@
      public static double INTAKE_WAIT_TIME = 3;
      public static double SHOOTER_TIME = 2.5;
 
-     public static int ARTIFACT_SHOOT_VEL = 1765;
+     public static int ARTIFACT_SHOOT_VEL = 1150;
 
 
      public void runOpMode() throws InterruptedException {
@@ -38,7 +39,8 @@
              .build();
 
          Action artifact1 = drive.actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
-             .strafeToLinearHeading(FieldConstants.PPG_RED_ARTIFACT, FieldConstants.RED_ARTIFACT_ANGLE)
+             .strafeToLinearHeading(new Vector2d(FieldConstants.PPG_RED_ARTIFACT.x, FieldConstants.RED_CLOSE_SHOOT.y), FieldConstants.RED_ARTIFACT_ANGLE)
+             .strafeTo(FieldConstants.PPG_RED_ARTIFACT)
              .build();
 
          Action artifact1_return = drive.actionBuilder(new Pose2d(FieldConstants.PPG_RED_ARTIFACT.x, FieldConstants.PPG_RED_ARTIFACT.y, FieldConstants.RED_ARTIFACT_ANGLE))
@@ -57,10 +59,14 @@
 
              .build();
 
-         Action artifact2_return = drive.actionBuilder(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y+10, FieldConstants.RED_ARTIFACT_ANGLE))
+         Action artifact2_return = drive.actionBuilder(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST+10, FieldConstants.RED_ARTIFACT_ANGLE))
 
-             //                .setReversed(true)
+//             .setReversed(true)
+             .lineToY(FieldConstants.PGP_RED_ARTIFACT.y)
              .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
+
+
+
 
              .build();
 
@@ -79,6 +85,7 @@
          Action artifact3_return = drive.actionBuilder(new Pose2d(FieldConstants.GPP_RED_ARTIFACT.x, FieldConstants.GPP_RED_ARTIFACT.y-26, FieldConstants.RED_ARTIFACT_ANGLE))
 
              //                .setReversed(true)
+             .lineToY(FieldConstants.GPP_RED_ARTIFACT.y)
              .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
 
              .build();
@@ -90,7 +97,11 @@
 
          waitForStart();
          if (isStopRequested()) return;
-
+//         Actions.runBlocking(
+//             drive.actionBuilder(new Pose2d(0, 0, 0))
+//                 .strafeTo(new Vector2d(0, 24))
+//                 .strafeTo(new Vector2d(0, 0))
+//                 .build());
 
          Actions.runBlocking(
                  new SequentialAction(
@@ -98,7 +109,7 @@
                          botActions.preload_parallel_red(preload),
 
                          new ParallelAction(
-                                 robot.outtake.shootVelocityAction(1150),
+                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
 
                          ),
@@ -106,9 +117,8 @@
 
                          new ParallelAction(
                                  artifact1,
-                                 robot.outtake.shootVelocityAction(1150),
+                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(INTAKE_WAIT_TIME)
-//                                 robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME)
 
                          ),
 
@@ -116,14 +126,12 @@
 
 
                          new ParallelAction(
-                                 artifact1_return,
-                                 robot.intake.intakeReverseTimeAction(0.5),
-                                 robot.outtake.reverseTimeAction(1)
+                                 artifact1_return
                          ),
                          robot.outtake.stopAction(),
 
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(1150),
+                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
@@ -131,21 +139,17 @@
 
                          new ParallelAction(
                                  artifact2,
-
-                                 robot.intake.intakeTimeAction(INTAKE_WAIT_TIME+1),
-                                 robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME+1)
+                                 robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
                          robot.intake.stop(),
 
                          new ParallelAction(
-                                 artifact2_return,
-                                 robot.intake.intakeReverseTimeAction(0.5),
-                                 robot.outtake.reverseTimeAction(1)
+                                 artifact2_return
                          ),
 
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(1150),
+                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
@@ -153,18 +157,16 @@
 
                          new ParallelAction(
                                  artifact3,
-                                 robot.intake.intakeTimeAction(4)
+                                 robot.intake.intakeTimeAction(3)
                          ),
 
                          robot.intake.stop(),
                          new ParallelAction(
-                                 artifact3_return,
-                                 robot.intake.intakeReverseTimeAction(0.5),
-                                 robot.outtake.reverseTimeAction(1)
+                                 artifact3_return
                          ),
                          new SequentialAction(
-                                 robot.outtake.shootVelocityAction(1150),
-                                 robot.intake.intakeTimeAction(5)
+                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
+                                 robot.intake.intakeTimeAction(2.5)
                          )
 
 

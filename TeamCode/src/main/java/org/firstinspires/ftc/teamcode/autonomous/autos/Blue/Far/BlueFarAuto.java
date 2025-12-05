@@ -32,7 +32,7 @@
 //         MecanumDrive drive = new MecanumDrive(hardwareMap, BLUE_FAR_START);
 
 //         Action artifact1 = drive.actionBuilder(new Pose2d(BLUE_FAR_START.position.x, BLUE_FAR_START.position.y, Math.toRadians(90)))
-// //                .strafeToLinearHeading(PPG_RED_ARTIFACT, RED_ARTIFACT_ANGLE+Math.toRadians(10))
+// //                .strafeToLinearHeading(PPG_BLUE_ARTIFACT, BLUE_ARTIFACT_ANGLE+Math.toRadians(10))
 //             .strafeToLinearHeading(GPP_BLUE_ARTIFACT, BLUE_ARTIFACT_ANGLE)
 //             .setTangent(Math.PI/2)
 //             .lineToY(GPP_BLUE_ARTIFACT.y+ARTIFACT_DIST-5, new TranslationalVelConstraint(90))
