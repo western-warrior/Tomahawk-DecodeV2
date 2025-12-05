@@ -30,7 +30,7 @@ public class Outtake {
     public double SETPOINT;
     MultipleTelemetry telemetry;
 
-    public static double P = 500, I = 0, D = 0, F = 19.5;
+    public static double P = 500, I = 0, D = 0, F = 14.3;
 //    public static double K = 0.0035; // saturation rate for the hood function, needs to be tuned
 //    double MIN_HOOD = 20; // need to determine this, btw these are all in degrees
 //    double MAX_HOOD = 60; // need to determine this
@@ -144,27 +144,17 @@ public class Outtake {
                 if (!init) {
                     init = true;
                 }
-
-
                 SETPOINT = vel;
-                velocityController.setSetpoint(SETPOINT);
-                error = SETPOINT - Math.abs(getVelocity());
+                error = SETPOINT - motor1.getVelocity();
 
-                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
                 if (timer.seconds() < time) {
-                    setPower(pidOutput);
+                    setVelocity(SETPOINT);
                     timer.reset();
                 }
                 else {
                     setPower(0);
                     timer.reset();
                 }
-
-
-                telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
-                telemetryPacket.put("ERROR", error);
-                telemetryPacket.put("SETPOINT", SETPOINT);
-
 
                 return error >= 50;
             }
@@ -186,18 +176,8 @@ public class Outtake {
 
 
                 SETPOINT = vel;
-                velocityController.setSetpoint(SETPOINT);
-                error = SETPOINT - Math.abs(getVelocity());
-
-                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
-                setPower(pidOutput);
-
-
-
-                telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
-                telemetryPacket.put("ERROR", error);
-                telemetryPacket.put("SETPOINT", SETPOINT);
-
+                error = SETPOINT - motor1.getVelocity();
+                setVelocity(SETPOINT);
 
                 return error >= 50;
             }

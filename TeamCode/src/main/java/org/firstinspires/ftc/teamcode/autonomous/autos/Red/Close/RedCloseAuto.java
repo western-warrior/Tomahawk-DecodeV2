@@ -10,7 +10,6 @@
  import com.acmerobotics.roadrunner.ftc.Actions;
  import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
  import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
  import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
  import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
@@ -21,10 +20,10 @@
  @Config
  public class RedCloseAuto extends LinearOpMode implements FieldConstants {
 
-     public static double INTAKE_WAIT_TIME = 3;
+     public static double INTAKE_WAIT_TIME = 2.5;
      public static double SHOOTER_TIME = 2.5;
 
-     public static int ARTIFACT_SHOOT_VEL = 1150;
+     public static int ARTIFACT_SHOOT_VEL = 1100;
 
 
      public void runOpMode() throws InterruptedException {
@@ -106,20 +105,19 @@
          Actions.runBlocking(
                  new SequentialAction(
 
-                         botActions.preload_parallel_red(preload),
-
+//                         botActions.preload_parallel_red(preload),
+                         preload,
+                         robot.intake.intakeReverseTimeAction(0.2),
                          new ParallelAction(
                                  robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
 
                          ),
                          robot.outtake.stopAction(),
-
+                         robot.outtake.stopAction(),
                          new ParallelAction(
                                  artifact1,
-                                 robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(INTAKE_WAIT_TIME)
-
                          ),
 
                          robot.intake.stop(),
@@ -129,14 +127,14 @@
                                  artifact1_return
                          ),
                          robot.outtake.stopAction(),
-
+                         robot.outtake.stopAction(),
                          new SequentialAction(
                                  robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
 
                          robot.outtake.stopAction(),
-
+                         robot.outtake.stopAction(),
                          new ParallelAction(
                                  artifact2,
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
@@ -152,8 +150,8 @@
                                  robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
                                  robot.intake.intakeTimeAction(SHOOTER_TIME)
                          ),
-
-//                         park
+                         robot.outtake.stopAction(),
+                         robot.outtake.stopAction(),
 
                          new ParallelAction(
                                  artifact3,

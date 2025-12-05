@@ -65,9 +65,6 @@ public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
             .lineToY(FieldConstants.PGP_BLUE_ARTIFACT.y)
             .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
 
-
-
-
             .build();
 
 
