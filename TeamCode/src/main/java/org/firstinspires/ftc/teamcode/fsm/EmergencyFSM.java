@@ -41,16 +41,20 @@ public class EmergencyFSM {
         if (controls.flywheelClose.value()) {
             outtake.shootVelocity(OuttakeConstants.CLOSE_VELOCITY);
         }
-        if (controls.flywheelOff.value()) {
+        else {
             outtake.shootVelocity(OuttakeConstants.OFF_VELOCITY);
         }
+        if (controls.intake.locked()) {intake.intake(); transfer.setPower(0);}
+        else if (controls.intakeReverse.locked()) {intake.intakeReverse(); transfer.setPower(-1);}
+        else if (controls.transfer.locked()) {transfer.setPower(1); intake.intake();}
+        else if (!controls.transfer.locked() && !controls.intakeReverse.locked()) {intake.intakeStop(); transfer.setPower(0);};
 //        else if (controls.flywheelFar.value()) {
 //            outtake.shootVelocity(OuttakeConstants.FAR_VELOCITY);
 //        }
 
         switch (gazelleState) {
             case BASE_STATE:
-                intake.intakeStop();
+                /*intake.intakeStop();
                 intake.transferStop();
                 outtake.shootStop();
 
@@ -58,17 +62,15 @@ public class EmergencyFSM {
                     gazelleState = GazelleState.INTAKING;
                 }
                 if (controls.transfer.value()) gazelleState = GazelleState.TRANSFERRING;
+                */
                 break;
+
 
             case INTAKING:
 
-                if (controls.intake.locked()) {intake.intake(); intake.transferIn(0);}
-                else if (controls.intakeReverse.locked()) {intake.intakeReverse(); intake.transferOut(1);}
-                else if (!controls.intake.locked()) {intake.intakeStop(); intake.transferStop();}
 
-                else intake.intakeStop();
                  //if (controls.flywheel.value()) gazelleState = GazelleState.SPINUP;
-                if (controls.transfer.locked()) gazelleState = GazelleState.TRANSFERRING;
+
                 break;
 /*
             case SPINUP:
@@ -80,12 +82,12 @@ public class EmergencyFSM {
                 break;
 */
             case TRANSFERRING:
-                transfer.setPower(1);
-                intake.intake();
+                //transfer.setPower(1);
+                //intake.intake();
                 //if (controls.intake.locked()) intake.intake();
                 //else if (controls.intakeReverse.locked()) gazelleState = GazelleState.INTAKING;
 //                else intake.intakeStop();
-                if (!controls.transfer.locked()) gazelleState = GazelleState.INTAKING; intake.transferStop();
+                //if (!controls.transfer.locked()) gazelleState = GazelleState.INTAKING; intake.transferStop();
                 break;
         }
     }
