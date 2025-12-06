@@ -58,8 +58,8 @@ public interface FieldConstants {
 
 
     // ======Gates======
-    Vector2d BLUE_GATE = new Vector2d(-12, 66);
-    Vector2d RED_GATE = new Vector2d(-12, -66);
+    Vector2d BLUE_GATE = new Vector2d(-2, 55);
+    Vector2d RED_GATE = new Vector2d(-2, -55);
 
     // ======STARTING POSITIONS======
     Pose2d RED_FAR_START = new Pose2d(-61.25, -5, Math.toRadians(0));

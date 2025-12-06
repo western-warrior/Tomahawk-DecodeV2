@@ -32,10 +32,10 @@ public class BLUE_CLOSE {
         Action artifact1 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
             .turn(Math.toRadians(47))
             .strafeTo(FieldConstants.PPG_BLUE_ARTIFACT)
-
+            .strafeToLinearHeading(FieldConstants.BLUE_GATE, 0)
             .build();
 
-        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.PPG_BLUE_ARTIFACT.y, FieldConstants.BLUE_ARTIFACT_ANGLE))
+        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_GATE.x, FieldConstants.BLUE_GATE.y, 0))
 
             .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
             .waitSeconds(0.85)
