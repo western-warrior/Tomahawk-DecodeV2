@@ -18,9 +18,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 public class FlywheelTuner extends LinearOpMode {
 
     public static double FAR_VELOCITY = 1500;
-    public static double CLOSE_VELOCITY = 1200;
+    public static double CLOSE_VELOCITY = 1100;
 
-    public static double P = 500, I = 0, D = 0, F = 19.5;
+    public static double P = 500, I = 0, D = 0, F = 14.3;
 
     Outtake flywheel;
     Intake intake;

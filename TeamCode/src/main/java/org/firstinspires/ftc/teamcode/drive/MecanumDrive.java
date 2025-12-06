@@ -65,34 +65,33 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double lateralInPerTick = 0.0015110021694745295;
-        public double inPerTick = 0.0023;
-        public double trackWidthTicks = 6121.915166708116;
+        public double lateralInPerTick = 0.0015195423659615968;
+        public double inPerTick = 0.00199038;
+        public double trackWidthTicks = 6168.550184839865;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.9114112110729526;
-        public double kV = 0.00024823331384967156;
-        public double kA = 0.00001;
+        public double kS = 2.005549710435344;
+        public double kV = 0.00022;
+        public double kA = 0.0000575;
 
 
-        public double MULT = 1;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 95; //85
-        public double minProfileAccel = -55;
-        public double maxProfileAccel = 95; // 85
+        public double maxWheelVel = 80; //85
+        public double minProfileAccel = -45;
+        public double maxProfileAccel = 85; // 85
 
         // turn profile parameters (in radians)
-        public double maxAngVel = 1.7*Math.PI; // shared with path
-        public double maxAngAccel = 1.7*Math.PI;
+        public double maxAngVel = Math.PI; // shared with path
+        public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0;
-        public double lateralGain = 0;
-        public double headingGain = 1.36;
+        public double axialGain = 8;
+        public double lateralGain = 3.5;
+        public double headingGain = 3;
 
-        public double axialVelGain = 1.0;
-        public double lateralVelGain = 0.0;
+        public double axialVelGain = 0.3;
+        public double lateralVelGain = 0.4;
         public double headingVelGain = 0.0;
     }
 
@@ -268,9 +267,9 @@ public final class MecanumDrive {
         }
 
         leftFront.setPower(wheelVels.leftFront.get(0) / maxPowerMag);
-        leftBack.setPower(wheelVels.leftBack.get(0) * PARAMS.MULT / maxPowerMag);
-        rightBack.setPower(wheelVels.rightBack.get(0) * PARAMS.MULT / maxPowerMag);
-        rightFront.setPower(wheelVels.rightFront.get(0) * PARAMS.MULT / maxPowerMag);
+        leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
+        rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
+        rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
     public final class FollowTrajectoryAction implements Action {
@@ -339,9 +338,9 @@ public final class MecanumDrive {
             ));
 
             leftFront.setPower(leftFrontPower);
-            leftBack.setPower(leftBackPower * PARAMS.MULT);
-            rightBack.setPower(rightBackPower * PARAMS.MULT);
-            rightFront.setPower(rightFrontPower * PARAMS.MULT);
+            leftBack.setPower(leftBackPower);
+            rightBack.setPower(rightBackPower);
+            rightFront.setPower(rightFrontPower);
 
             p.put("x", localizer.getPose().position.x);
             p.put("y", localizer.getPose().position.y);
@@ -430,9 +429,9 @@ public final class MecanumDrive {
             ));
 
             leftFront.setPower(feedforward.compute(wheelVels.leftFront) / voltage);
-            leftBack.setPower(feedforward.compute(wheelVels.leftBack) * PARAMS.MULT / voltage);
-            rightBack.setPower(feedforward.compute(wheelVels.rightBack) * PARAMS.MULT / voltage);
-            rightFront.setPower(feedforward.compute(wheelVels.rightFront) * PARAMS.MULT / voltage);
+            leftBack.setPower(feedforward.compute(wheelVels.leftBack) / voltage);
+            rightBack.setPower(feedforward.compute(wheelVels.rightBack) / voltage);
+            rightFront.setPower(feedforward.compute(wheelVels.rightFront) / voltage);
 
             Canvas c = p.fieldOverlay();
             drawPoseHistory(c);
