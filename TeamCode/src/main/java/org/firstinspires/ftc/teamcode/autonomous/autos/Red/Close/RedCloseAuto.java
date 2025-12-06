@@ -16,6 +16,8 @@
  import org.firstinspires.ftc.teamcode.subsystems.Robot;
  import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 
+ //TODO: change shoot pos to be valid; make artfact 1 turn better
+
  @Autonomous
  @Config
  public class RedCloseAuto extends LinearOpMode implements FieldConstants {
