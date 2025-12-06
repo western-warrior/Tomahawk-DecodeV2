@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
+
 import static org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage.side;
+import static org.firstinspires.ftc.teamcode.subsystems.Outtake.OuttakeConstants.CLOSE_VELOCITY;
+
 
 import androidx.annotation.NonNull;
+
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -17,8 +21,10 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 import org.firstinspires.ftc.teamcode.pid.MiniPID;
+
 
 public class Outtake {
     public DcMotorEx motor1;
@@ -30,27 +36,34 @@ public class Outtake {
     public double SETPOINT;
     MultipleTelemetry telemetry;
 
+
     public static double P = 500, I = 0, D = 0, F = 14.3;
 //    public static double K = 0.0035; // saturation rate for the hood function, needs to be tuned
 //    double MIN_HOOD = 20; // need to determine this, btw these are all in degrees
 //    double MAX_HOOD = 60; // need to determine this
+
 
     public Outtake(HardwareMap hardwareMap) {
         motor1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
         motor2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
         hood = hardwareMap.get(Servo.class, "hood");
 
+
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         motor1.setDirection(DcMotorEx.Direction.REVERSE);
         motor2.setDirection(DcMotorEx.Direction.REVERSE);
 
+
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
         motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
         motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+
 
         velocityController = new MiniPID(P, I, D, F);
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
@@ -63,10 +76,12 @@ public class Outtake {
         motor2.setPower(power);
     }
 
+
     public void setVelocity(double velocity) {
         motor1.setVelocity(velocity);
         motor2.setVelocity(velocity);
     }
+
 
     public void autoVelocity(double Rx, double Ry) {
         // calculate hood first
@@ -74,8 +89,10 @@ public class Outtake {
 //        hood.setPosition(hoodPos);          // then apply it to the servo
         double hoodPos = 0;
 
+
         // calculate velocity based on hood
         int velocity = veloCalc(Rx, Ry, hoodPos);  // use hoodPos as input
+
 
         // apply PID to reach velocity
         velocityController.setSetpoint(velocity);
@@ -86,13 +103,26 @@ public class Outtake {
         setPower(pidOutput);
     }
 
+
     public void shootVelocity(int velocity) {
-        velocityController.setSetpoint(velocity);
-        pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
-//        telemetry.addData("PID Output", pidOutput);
-//        telemetry.addData("Setpoint", velocity);
-//        telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
-        setPower(pidOutput);
+       /*
+       velocityController.setSetpoint(velocity);
+       pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
+       telemetry.addData("PID Output", pidOutput);
+       telemetry.addData("Setpoint", velocity);
+       telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
+       setPower(pidOutput);
+       */
+
+
+        motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+        motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+
+
+        motor1.setVelocity(velocity);
+        motor2.setVelocity(velocity);
+
+
     }
     public void shootStop() {
         motor1.setPower(0);
@@ -120,6 +150,7 @@ public class Outtake {
 //        return (hood - MIN_HOOD) / (MAX_HOOD - MIN_HOOD); // this gives a range between 0 and 1 for the servo, will define constraints later
 //    }
 
+
     public Action stopAction() {
         return new Action() {
             @Override
@@ -131,24 +162,36 @@ public class Outtake {
         };
     }
 
+
     public Action shootVelocityTimeAction(int vel, double time) {
 
+
         return new Action() {
+
 
             private boolean init = false;
             ElapsedTime timer = new ElapsedTime();
 
+
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
 
                 if (!init) {
                     init = true;
                 }
-                SETPOINT = vel;
-                error = SETPOINT - motor1.getVelocity();
 
+
+
+
+                SETPOINT = vel;
+                velocityController.setSetpoint(SETPOINT);
+                error = SETPOINT - Math.abs(getVelocity());
+
+
+                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
                 if (timer.seconds() < time) {
-                    setVelocity(SETPOINT);
+                    setPower(pidOutput);
                     timer.reset();
                 }
                 else {
@@ -156,31 +199,65 @@ public class Outtake {
                     timer.reset();
                 }
 
+
+
+
+                telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
+                telemetryPacket.put("ERROR", error);
+                telemetryPacket.put("SETPOINT", SETPOINT);
+
+
+
+
                 return error >= 50;
             }
+
 
         };
     }
     public Action shootVelocityAction(int vel) {
 
+
         return new Action() {
+
 
             private boolean init = false;
 
+
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
 
                 if (!init) {
                     init = true;
                 }
 
 
+
+
                 SETPOINT = vel;
-                error = SETPOINT - motor1.getVelocity();
-                setVelocity(SETPOINT);
+                velocityController.setSetpoint(SETPOINT);
+                error = SETPOINT - Math.abs(getVelocity());
+
+
+                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
+                setPower(pidOutput);
+
+
+
+
+
+
+                telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
+                telemetryPacket.put("ERROR", error);
+                telemetryPacket.put("SETPOINT", SETPOINT);
+
+
+
 
                 return error >= 50;
             }
+
 
         };
     }
@@ -222,6 +299,8 @@ public class Outtake {
             }
         };
     }
+
+
 
 
 }
