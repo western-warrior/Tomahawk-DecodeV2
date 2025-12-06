@@ -84,7 +84,7 @@ public class GamepadMappings {
 
 //        servoBlocker.update(gamepad1.left_bumper);
         transferReverse.update(gamepad1.left_bumper);
-        transfer.update(gamepad1.right_bumper);
+        transfer.update(gamepad1.right_bumper || gamepad2.right_bumper);
 
         intakeReverseUpdate();
         outtakeUpdate();
