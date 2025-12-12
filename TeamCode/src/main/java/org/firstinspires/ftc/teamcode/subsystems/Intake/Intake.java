@@ -148,6 +148,7 @@ public class Intake {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 intakeStop();
+                transferStop();
                 return false;
             }
         };

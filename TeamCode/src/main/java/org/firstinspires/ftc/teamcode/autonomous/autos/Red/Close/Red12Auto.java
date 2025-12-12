@@ -20,7 +20,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 @Config
 public class Red12Auto extends LinearOpMode implements FCV2 {
 
-    public static double INTAKE_WAIT_TIME = 4.5;
+    //TODO: maybe make intake run for the entire thing
+
+    public static double INTAKE_WAIT_TIME = 4.6;
     public static double SHOOTER_TIME = 2.5;
 
     public static int ARTIFACT_SHOOT_VEL = 1050;
@@ -38,10 +40,11 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
             .build();
 
         Action artifact1 = drive.actionBuilder(new Pose2d(FCV2.RED_CLOSE_SHOOT.x, FCV2.RED_CLOSE_SHOOT.y, FCV2.RED_CLOSE_ANGLE))
-            .strafeToLinearHeading(new Vector2d(FCV2.PPG_RED_ARTIFACT.x, FCV2.RED_CLOSE_SHOOT.y), FCV2.RED_ARTIFACT_ANGLE)
-            .strafeTo(new Vector2d(FCV2.PPG_RED_ARTIFACT.x, FCV2.PPG_RED_ARTIFACT.y + 16))
-            .strafeToLinearHeading(FCV2.RED_GATE, 0)
-            .build();
+                .strafeToLinearHeading(new Vector2d(FCV2.PPG_RED_ARTIFACT.x, FCV2.RED_CLOSE_SHOOT.y), FCV2.RED_ARTIFACT_ANGLE)
+                .strafeTo(FCV2.PPG_RED_ARTIFACT)
+                .lineToY(FCV2.PPG_RED_ARTIFACT.y + 16)
+                .strafeToLinearHeading(FCV2.RED_GATE, 0)
+                .build();
 
         Action artifact1_return = drive.actionBuilder(new Pose2d(FCV2.RED_GATE.x, FCV2.RED_GATE.y, 0))
             .strafeToLinearHeading(FCV2.RED_CLOSE_SHOOT, FCV2.RED_CLOSE_ANGLE)
@@ -50,22 +53,22 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
 
 
         Action artifact2 = drive.actionBuilder(new Pose2d(FCV2.RED_CLOSE_SHOOT.x, FCV2.RED_CLOSE_SHOOT.y, FCV2.RED_CLOSE_ANGLE))
-            .strafeToLinearHeading(FCV2.PGP_RED_ARTIFACT, FCV2.RED_ARTIFACT_ANGLE)
+            .strafeToLinearHeading(new Vector2d(FCV2.PGP_RED_ARTIFACT.x+2, FCV2.PGP_RED_ARTIFACT.y), FCV2.RED_ARTIFACT_ANGLE)
 
             .setTangent(FCV2.RED_ARTIFACT_ANGLE)
             //
-            .lineToY(FCV2.PGP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST)
+            .lineToY(FCV2.PGP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST-1)
 //            .setReversed(true)
 //            .splineToLinearHeading(new Pose2d(FCV2.PGP_RED_ARTIFACT.x, FCV2.PGP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST, FCV2.RED_ARTIFACT_ANGLE), -Math.PI/2.2)
 
             .build();
 
-        Action artifact2_return = drive.actionBuilder(new Pose2d(FCV2.PGP_RED_ARTIFACT.x, FCV2.PGP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST, FCV2.RED_ARTIFACT_ANGLE))
+        Action artifact2_return = drive.actionBuilder(new Pose2d(FCV2.PGP_RED_ARTIFACT.x+2, FCV2.PGP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST-1, FCV2.RED_ARTIFACT_ANGLE))
 
 //            .strafeTo(FCV2.PGP_RED_ARTIFACT)
 //            .strafeToLinearHeading(FCV2.RED_CLOSE_SHOOT, FCV2.RED_CLOSE_ANGLE-Math.toRadians(5-2))
             .setReversed(true)
-            .splineToLinearHeading(new Pose2d(FCV2.RED_CLOSE_SHOOT.x, FCV2.RED_CLOSE_SHOOT.y, FCV2.RED_CLOSE_ANGLE), Math.PI/8)
+            .splineToLinearHeading(new Pose2d(FCV2.RED_CLOSE_SHOOT.x, FCV2.RED_CLOSE_SHOOT.y, FCV2.RED_CLOSE_ANGLE), RED_CLOSE_ANGLE)
 
 //                            .splineToLinearHeading(new Pose2d(FCV2.RED_CLOSE_SHOOT, FCV2.RED_CLOSE_ANGLE))
 //            .setReversed(true)
@@ -81,11 +84,11 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
 //            .setTangent(0)
 //            .splineToConstantHeading(FCV2.GPP_RED_ARTIFACT, -0.75*Math.PI)
             .waitSeconds(.2)
-            .lineToY(FCV2.GPP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST)
+            .lineToY(FCV2.GPP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST-12)
 
             .build();
 
-        Action artifact3_return = drive.actionBuilder(new Pose2d(FCV2.GPP_RED_ARTIFACT.x, FCV2.GPP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST, FCV2.RED_ARTIFACT_ANGLE))
+        Action artifact3_return = drive.actionBuilder(new Pose2d(FCV2.GPP_RED_ARTIFACT.x, FCV2.GPP_RED_ARTIFACT.y-FCV2.ARTIFACT_DIST-12, FCV2.RED_ARTIFACT_ANGLE))
 
             //                .setReversed(true)
             .strafeToLinearHeading(FCV2.RED_CLOSE_SHOOT, FCV2.RED_CLOSE_ANGLE)
@@ -138,6 +141,7 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
 
                 robot.outtake.stopAction(),
                 robot.outtake.stopAction(),
+                robot.intake.stop(),
                 new ParallelAction(
                     robot.intake.intakeTimeAction(SHOOTER_TIME),
                     artifact2
@@ -159,7 +163,7 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
 
                 new ParallelAction(
                     artifact3,
-                    robot.intake.intakeTimeAction(INTAKE_WAIT_TIME)
+                    robot.intake.intakeTimeAction(INTAKE_WAIT_TIME-0.8)
                 ),
 
                 robot.intake.stop(),
