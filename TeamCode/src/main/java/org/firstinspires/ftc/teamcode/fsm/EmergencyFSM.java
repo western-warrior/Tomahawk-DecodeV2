@@ -35,12 +35,22 @@ public class EmergencyFSM {
         this.gazelleState = GazelleState.BASE_STATE;
     }
 
+
     public void gazelleUpdate() {
         controls.update();
         robot.driveTrain.update();
+        robot.drive.localizer.update();
+        telemetry.update();
         if (controls.flywheelClose.value()) {
             outtake.shootVelocity(OuttakeConstants.CLOSE_VELOCITY);
             telemetry.addData("Outtake Shooting", true);
+        }
+        else if (controls.autoVelo.value()) {
+            double distance = Math.sqrt(Math.pow(36 - robot.drive.localizer.getPose().position.x, 2) + Math.pow(36 - robot.drive.localizer.getPose().position.y, 2));
+            int velocity = outtake.autoVelocityTest(distance);
+            outtake.shootVelocity(velocity+50);
+            telemetry.addData("Velocity: ", velocity);
+            telemetry.addData("Position: ", robot.drive.localizer.getPose());
         }
         else {
             outtake.shootVelocity(OuttakeConstants.OFF_VELOCITY);

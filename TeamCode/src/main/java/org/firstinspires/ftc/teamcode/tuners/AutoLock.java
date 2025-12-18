@@ -96,6 +96,7 @@ public class AutoLock extends LinearOpMode {
 
     public static boolean lock = true;
 
+
     public void runOpMode() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         Intake intake = new Intake(hardwareMap, telemetry);
@@ -109,9 +110,11 @@ public class AutoLock extends LinearOpMode {
             intake.intake();
             intake.transferIn(1);
             drive.localizer.update();
-            double distance = Math.sqrt(Math.pow(72 - drive.localizer.getPose().position.x, 2) + Math.pow(72 - drive.localizer.getPose().position.y, 2));
-            outtake.autoVelocity(distance);
+            double distance = Math.sqrt(Math.pow(36 - drive.localizer.getPose().position.x, 2) + Math.pow(36 - drive.localizer.getPose().position.y, 2));
+            int velocity = outtake.autoVelocityTest(distance);
+            outtake.shootVelocity(velocity);
             telemetry.addData("Dist", distance);
+            telemetry.addData("Velocity", velocity);
             telemetry.update();
         }
     }

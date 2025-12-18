@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import static org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage.side;
 import static org.firstinspires.ftc.teamcode.subsystems.Outtake.OuttakeConstants.CLOSE_VELOCITY;
 
-
 import androidx.annotation.NonNull;
 
 
@@ -33,6 +32,7 @@ public class Outtake {
     double error;
     public double SETPOINT;
     MultipleTelemetry telemetry;
+
 
 
 
@@ -66,6 +66,9 @@ public class Outtake {
 
 
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+    }
+    public double clamp(double value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
     public double getVelocity() {
         return motor1.getVelocity();
@@ -120,6 +123,12 @@ public class Outtake {
         double velocity = 1500 - 400 / (1 + Math.exp(K * (R - T)));
         telemetry.addData("Vel", 400 / (1 + Math.exp(K * (R - T))));
         return (int) velocity;
+    }
+    
+    public int autoVelocityTest(double dist) {
+        double velocity = clamp(0.0251133 * Math.pow(dist, 2) + 2.48225 * dist + 940.02999, 0, 1500); //auto velo formula, 5 data points on blue goal
+        return (int)velocity;
+
     }
 //    public double hoodCalc(double Rx, double Ry) {
 //        double GOAL_X = 72;
