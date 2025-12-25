@@ -9,6 +9,8 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+//import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +18,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-public class BLUE_CLOSE {
+public class Blue12 {
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(700);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-            .setConstraints(70, 70, 2.5, 3, 18)
+            .setConstraints(80, 80, 2.5, 3, 18)
             .setDimensions(16.53, 18)
             .build();
 
@@ -31,13 +33,13 @@ public class BLUE_CLOSE {
             .build();
 
         Action artifact1 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .turn(Math.toRadians(42))
-            .strafeTo(new Vector2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.BLUE_CLOSE_SHOOT.y))
+            .strafeToLinearHeading(new Vector2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.BLUE_CLOSE_SHOOT.y), FieldConstants.BLUE_ARTIFACT_ANGLE)
             .strafeTo(FieldConstants.PPG_BLUE_ARTIFACT)
-//            .strafeToLinearHeading(FieldConstants.BLUE_GATE, 0)
+            .lineToY(FieldConstants.PPG_BLUE_ARTIFACT.y - 16)
+            .strafeToLinearHeading(FieldConstants.BLUE_GATE, 0)
             .build();
 
-        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.PPG_BLUE_ARTIFACT.y, FieldConstants.BLUE_CLOSE_ANGLE+Math.toRadians(42)))
+        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_GATE.x, FieldConstants.BLUE_GATE.y, 0))
 
             .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
             .waitSeconds(0.85)
@@ -88,6 +90,10 @@ public class BLUE_CLOSE {
 
             .build();
 
+        Action park = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
+            .strafeTo(new Vector2d(FieldConstants.PGP_BLUE_ARTIFACT.x, FieldConstants.PGP_BLUE_ARTIFACT.y+5))
+            .build();
+
         myBot.runAction(
             new SequentialAction(
                 preload,
@@ -119,6 +125,7 @@ public class BLUE_CLOSE {
 //
 //                    )
                 ),
+
 //                robot.outtake.stopAction(),
 
 
@@ -189,7 +196,8 @@ public class BLUE_CLOSE {
 //                        robot.outtake.shootVelocityAction(CLOSE_VELOCITY)
 //
 //                    )
-                )
+                ),
+                park
 
 //                new SequentialAction(
 //                    robot.intake.intakeTimeAction(SHOOTER_TIME)

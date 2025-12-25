@@ -37,7 +37,7 @@ public class GamepadMappings {
     public Toggle flywheelFar;
     public Toggle flywheelOff;
     public Toggle autoAim;
-
+    public Toggle autoVelo;
 
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
@@ -55,6 +55,7 @@ public class GamepadMappings {
         flywheelFar = new Toggle(false);
         flywheelOff = new Toggle(false);
         autoAim = new Toggle(false);
+        autoVelo = new Toggle(false);
     }
 
     public void joystickUpdate() {
@@ -71,8 +72,9 @@ public class GamepadMappings {
     }
     public void outtakeUpdate() {
         flywheelClose.update(gamepad1.a);
-        flywheelFar.update(gamepad1.y);
-        flywheelOff.update(gamepad1.b);
+        flywheelFar.update(gamepad2.y);
+        flywheelOff.update(gamepad2.b);
+        autoVelo.update(gamepad1.left_bumper);
 //        autoAim.update(gamepad1.dpad_up);
     }
 

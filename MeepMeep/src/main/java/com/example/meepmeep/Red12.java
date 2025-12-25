@@ -9,6 +9,8 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+//import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,76 +18,77 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-public class BLUE_CLOSE {
+public class Red12 {
 
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(700);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-            .setConstraints(70, 70, 2.5, 3, 18)
+            .setConstraints(80, 80, 2.5, 3, 18)
             .setDimensions(16.53, 18)
             .build();
 
-        Action preload = myBot.getDrive().actionBuilder(FieldConstants.BLUE_CLOSE_START)
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
+        Action preload = myBot.getDrive().actionBuilder(FieldConstants.RED_CLOSE_START)
+            .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
             .build();
 
-        Action artifact1 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .turn(Math.toRadians(42))
-            .strafeTo(new Vector2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.BLUE_CLOSE_SHOOT.y))
-            .strafeTo(FieldConstants.PPG_BLUE_ARTIFACT)
-//            .strafeToLinearHeading(FieldConstants.BLUE_GATE, 0)
+        Action artifact1 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
+            .strafeToLinearHeading(new Vector2d(FieldConstants.PPG_RED_ARTIFACT.x, FieldConstants.RED_CLOSE_SHOOT.y), FieldConstants.RED_ARTIFACT_ANGLE)
+            .strafeTo(FieldConstants.PPG_RED_ARTIFACT)
+            .lineToY(FieldConstants.PPG_RED_ARTIFACT.y + 16)
+            .strafeToLinearHeading(FieldConstants.RED_GATE, 0)
             .build();
 
-        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.PPG_BLUE_ARTIFACT.y, FieldConstants.BLUE_CLOSE_ANGLE+Math.toRadians(42)))
-
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
-            .waitSeconds(0.85)
-
+        Action artifact1_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_GATE.x, FieldConstants.RED_GATE.y, 0))
+            .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
             .build();
 
 
-        Action artifact2 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .strafeToLinearHeading(FieldConstants.PGP_BLUE_ARTIFACT, FieldConstants.BLUE_ARTIFACT_ANGLE)
+        Action artifact2 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
+            .strafeToLinearHeading(FieldConstants.PGP_RED_ARTIFACT, FieldConstants.RED_ARTIFACT_ANGLE)
 
-            .setTangent(FieldConstants.BLUE_ARTIFACT_ANGLE)
+            .setTangent(FieldConstants.RED_ARTIFACT_ANGLE)
             //
-            .lineToY(FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST)
+            .lineToY(FieldConstants.PGP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST)
 //            .setReversed(true)
-//            .splineToLinearHeading(new Pose2d(FieldConstants.PGP_BLUE_ARTIFACT.x, FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE), +Math.PI/2.2)
+//            .splineToLinearHeading(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST, FieldConstants.RED_ARTIFACT_ANGLE), -Math.PI/2.2)
 
             .build();
 
-        Action artifact2_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.PGP_BLUE_ARTIFACT.x, FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE))
+        Action artifact2_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST, FieldConstants.RED_ARTIFACT_ANGLE))
 
-//            .strafeTo(FieldConstants.PGP_BLUE_ARTIFACT)
-//            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE+Math.toRadians(5+2))
+//            .strafeTo(FieldConstants.PGP_RED_ARTIFACT)
+//            .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE-Math.toRadians(5-2))
             .setReversed(true)
-            .splineToLinearHeading(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE), Math.PI/8)
+            .splineToLinearHeading(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE), Math.PI/8)
 
-//                            .splineToLinearHeading(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE))
+//                            .splineToLinearHeading(new Pose2d(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE))
 //            .setReversed(true)
-//            .strafeTo(FieldConstants.BLUE_CLOSE_SHOOT)
+//            .strafeTo(FieldConstants.RED_CLOSE_SHOOT)
 
             .build();
 
 
 
-        Action artifact3 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .strafeToLinearHeading(FieldConstants.GPP_BLUE_ARTIFACT, FieldConstants.BLUE_ARTIFACT_ANGLE)
+        Action artifact3 = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
+            .strafeToLinearHeading(FieldConstants.GPP_RED_ARTIFACT, FieldConstants.RED_ARTIFACT_ANGLE)
 
 //            .setTangent(0)
-//            .splineToConstantHeading(FieldConstants.GPP_BLUE_ARTIFACT, +0.75*Math.PI)
-            .waitSeconds(.2)
-            .lineToY(FieldConstants.GPP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST)
+//            .splineToConstantHeading(FieldConstants.GPP_RED_ARTIFACT, -0.75*Math.PI)
+            .setTangent(FieldConstants.BLUE_ARTIFACT_ANGLE)
+            .lineToY(FieldConstants.GPP_RED_ARTIFACT.y-FieldConstants.ARTIFACT_DIST)
 
             .build();
 
-        Action artifact3_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.GPP_BLUE_ARTIFACT.x, FieldConstants.GPP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE))
+        Action artifact3_return = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.GPP_RED_ARTIFACT.x, FieldConstants.GPP_RED_ARTIFACT.y - FieldConstants.ARTIFACT_DIST, FieldConstants.RED_ARTIFACT_ANGLE))
 
             //                .setReversed(true)
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
+            .strafeToLinearHeading(FieldConstants.RED_CLOSE_SHOOT, FieldConstants.RED_CLOSE_ANGLE)
 
+            .build();
+
+        Action park = myBot.getDrive().actionBuilder(new Pose2d(FieldConstants.RED_CLOSE_SHOOT.x, FieldConstants.RED_CLOSE_SHOOT.y, FieldConstants.RED_CLOSE_ANGLE))
+            .strafeTo(new Vector2d(FieldConstants.PGP_RED_ARTIFACT.x, FieldConstants.PGP_RED_ARTIFACT.y-5))
             .build();
 
         myBot.runAction(
@@ -119,6 +122,7 @@ public class BLUE_CLOSE {
 //
 //                    )
                 ),
+
 //                robot.outtake.stopAction(),
 
 
@@ -176,8 +180,8 @@ public class BLUE_CLOSE {
 
                 new ParallelAction(
                     artifact3
-//                    robot.intake.intakeTimeAction(INTAKE_WAIT_TIME+.5),
-//                    robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME+.5)
+//                    robot.intake.intakeTimeAction(INTAKE_WAIT_TIME-.5),
+//                    robot.outtake.reverseTimeAction(INTAKE_WAIT_TIME-.5)
                 ),
 //                robot.intake.stop(),
 
@@ -189,11 +193,12 @@ public class BLUE_CLOSE {
 //                        robot.outtake.shootVelocityAction(CLOSE_VELOCITY)
 //
 //                    )
-                )
+                ),
 
 //                new SequentialAction(
 //                    robot.intake.intakeTimeAction(SHOOTER_TIME)
 //                )
+                park
             )
 
         );

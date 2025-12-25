@@ -4,11 +4,11 @@ package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import static org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage.side;
 import static org.firstinspires.ftc.teamcode.subsystems.Outtake.OuttakeConstants.CLOSE_VELOCITY;
 
-
 import androidx.annotation.NonNull;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -23,22 +23,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
-import org.firstinspires.ftc.teamcode.pid.MiniPID;
 
-
+@Config
 public class Outtake {
     public DcMotorEx motor1;
     public DcMotorEx motor2;
     Servo hood;
-    MiniPID velocityController;
-    public double pidOutput;
     double error;
     public double SETPOINT;
     MultipleTelemetry telemetry;
 
 
+
+
     public static double P = 500, I = 0, D = 0, F = 14.3;
-//    public static double K = 0.0035; // saturation rate for the hood function, needs to be tuned
+    public static double K = 0.05; // saturation rate for the hood function, needs to be tuned
+    public static double T = 120; // saturation rate for the hood function, needs to be tuned
 //    double MIN_HOOD = 20; // need to determine this, btw these are all in degrees
 //    double MAX_HOOD = 60; // need to determine this
 
@@ -65,8 +65,10 @@ public class Outtake {
         motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
 
-        velocityController = new MiniPID(P, I, D, F);
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
+    }
+    public double clamp(double value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
     public double getVelocity() {
         return motor1.getVelocity();
@@ -83,7 +85,7 @@ public class Outtake {
     }
 
 
-    public void autoVelocity(double Rx, double Ry) {
+    public void autoVelocity(double R) {
         // calculate hood first
 //        double hoodPos = hoodCalc(Rx, Ry);  // hoodCalc just returns a value
 //        hood.setPosition(hoodPos);          // then apply it to the servo
@@ -91,29 +93,16 @@ public class Outtake {
 
 
         // calculate velocity based on hood
-        int velocity = veloCalc(Rx, Ry, hoodPos);  // use hoodPos as input
-
+        int velocity = veloCalc(R, hoodPos);  // use hoodPos as input
+        setVelocity(velocity);
 
         // apply PID to reach velocity
-        velocityController.setSetpoint(velocity);
-        pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
-//        telemetry.addData("PID Output", pidOutput);
-//        telemetry.addData("Setpoint", velocity);
-//        telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
-        setPower(pidOutput);
+        telemetry.addData("Setpoint", velocity);
+        telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
     }
 
 
     public void shootVelocity(int velocity) {
-       /*
-       velocityController.setSetpoint(velocity);
-       pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
-       telemetry.addData("PID Output", pidOutput);
-       telemetry.addData("Setpoint", velocity);
-       telemetry.addData("Error", velocity - (motor1.getVelocity()+ motor2.getVelocity())/2);
-       setPower(pidOutput);
-       */
-
 
         motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
         motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
@@ -128,9 +117,18 @@ public class Outtake {
         motor1.setPower(0);
         motor2.setPower(0);
     }
-    public int veloCalc(double Rx, double Ry, double hoodPos) {
-        int velocity = 5500; /* formula that depends on hoodPos, Rx, Ry */
-        return velocity;
+    public int veloCalc(double R, double hoodPos) {
+//        int velocity = 1100; /* formula that depends on hoodPos, Rx, Ry */
+//        double velocity = 1000 + R * K;
+        double velocity = 1500 - 400 / (1 + Math.exp(K * (R - T)));
+        telemetry.addData("Vel", 400 / (1 + Math.exp(K * (R - T))));
+        return (int) velocity;
+    }
+    
+    public int autoVelocityTest(double dist) {
+        double velocity = clamp(0.0251133 * Math.pow(dist, 2) + 2.48225 * dist + 940.02999, 0, 1500); //auto velo formula, 5 data points on blue goal
+        return (int)velocity;
+
     }
 //    public double hoodCalc(double Rx, double Ry) {
 //        double GOAL_X = 72;
@@ -181,17 +179,10 @@ public class Outtake {
                     init = true;
                 }
 
-
-
-
                 SETPOINT = vel;
-                velocityController.setSetpoint(SETPOINT);
-                error = SETPOINT - Math.abs(getVelocity());
 
-
-                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
                 if (timer.seconds() < time) {
-                    setPower(pidOutput);
+                    setVelocity(SETPOINT);
                     timer.reset();
                 }
                 else {
@@ -232,27 +223,13 @@ public class Outtake {
                     init = true;
                 }
 
-
-
-
                 SETPOINT = vel;
-                velocityController.setSetpoint(SETPOINT);
-                error = SETPOINT - Math.abs(getVelocity());
 
-
-                pidOutput = velocityController.getOutput(Math.abs(getVelocity()));
-                setPower(pidOutput);
-
-
-
-
-
+                setVelocity(SETPOINT);
 
                 telemetryPacket.put("VELOCITY", Math.abs(getVelocity()));
                 telemetryPacket.put("ERROR", error);
                 telemetryPacket.put("SETPOINT", SETPOINT);
-
-
 
 
                 return error >= 50;

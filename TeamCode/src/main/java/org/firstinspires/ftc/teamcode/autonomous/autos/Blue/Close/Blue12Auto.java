@@ -5,23 +5,21 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
-import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
+import org.firstinspires.ftc.teamcode.autonomous.autos.FCV2;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 
 @Autonomous
 @Config
-public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
+public class Blue12Auto extends LinearOpMode implements FCV2 {
 
-    public static double INTAKE_WAIT_TIME = 4;
+    public static double INTAKE_WAIT_TIME = 3.5;
     public static double SHOOTER_TIME = 2.5;
 
     public static int ARTIFACT_SHOOT_VEL = 1050;
@@ -34,68 +32,68 @@ public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, BLUE_CLOSE_START);
 
-        Action preload = drive.actionBuilder(FieldConstants.BLUE_CLOSE_START)
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
+        Action preload = drive.actionBuilder(FCV2.BLUE_CLOSE_START)
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
             .build();
 
-        Action artifact1 = drive.actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .turn(Math.toRadians(43))
-            .strafeTo(new Vector2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.BLUE_CLOSE_SHOOT.y))
-            .strafeTo(FieldConstants.PPG_BLUE_ARTIFACT)
-//            .strafeToLinearHeading(FieldConstants.BLUE_GATE, 0)
+        Action artifact1 = drive.actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
+            .strafeToLinearHeading(new Vector2d(FCV2.PPG_BLUE_ARTIFACT.x, FCV2.BLUE_CLOSE_SHOOT.y), FCV2.BLUE_ARTIFACT_ANGLE)
+            .strafeTo(FCV2.PPG_BLUE_ARTIFACT)
+            .strafeToLinearHeading(FCV2.BLUE_GATE, 0)
             .build();
 
-        Action artifact1_return = drive.actionBuilder(new Pose2d(FieldConstants.PPG_BLUE_ARTIFACT.x, FieldConstants.PPG_BLUE_ARTIFACT.y, FieldConstants.BLUE_CLOSE_ANGLE+Math.toRadians(43)))
+        Action artifact1_return = drive.actionBuilder(new Pose2d(FCV2.BLUE_GATE.x, FCV2.BLUE_GATE.y, 0))
 
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
+            .waitSeconds(0.85)
 
             .build();
 
 
-        Action artifact2 = drive.actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .strafeToLinearHeading(FieldConstants.PGP_BLUE_ARTIFACT, FieldConstants.BLUE_ARTIFACT_ANGLE)
+        Action artifact2 = drive.actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
+            .strafeToLinearHeading(FCV2.PGP_BLUE_ARTIFACT, FCV2.BLUE_ARTIFACT_ANGLE)
 
-            .setTangent(FieldConstants.BLUE_ARTIFACT_ANGLE)
+            .setTangent(FCV2.BLUE_ARTIFACT_ANGLE)
             //
-            .lineToY(FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST)
+            .lineToY(FCV2.PGP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST)
 //            .setReversed(true)
-//            .splineToLinearHeading(new Pose2d(FieldConstants.PGP_BLUE_ARTIFACT.x, FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE), +Math.PI/2.2)
+//            .splineToLinearHeading(new Pose2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST, FCV2.BLUE_ARTIFACT_ANGLE), +Math.PI/2.2)
 
             .build();
 
-        Action artifact2_return = drive.actionBuilder(new Pose2d(FieldConstants.PGP_BLUE_ARTIFACT.x, FieldConstants.PGP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE))
+        Action artifact2_return = drive.actionBuilder(new Pose2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST, FCV2.BLUE_ARTIFACT_ANGLE))
 
-//            .strafeTo(FieldConstants.PGP_BLUE_ARTIFACT)
-//            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE+Math.toRadians(5+2))
+//            .strafeTo(FCV2.PGP_BLUE_ARTIFACT)
+//            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE+Math.toRadians(5+2))
             .setReversed(true)
-            .splineToLinearHeading(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE), Math.PI/8)
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), Math.PI/8)
 
-//                            .splineToLinearHeading(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE))
+//                            .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE))
 //            .setReversed(true)
-//            .strafeTo(FieldConstants.BLUE_CLOSE_SHOOT)
+//            .strafeTo(FCV2.BLUE_CLOSE_SHOOT)
 
             .build();
 
 
 
-        Action artifact3 = drive.actionBuilder(new Pose2d(FieldConstants.BLUE_CLOSE_SHOOT.x, FieldConstants.BLUE_CLOSE_SHOOT.y, FieldConstants.BLUE_CLOSE_ANGLE))
-            .strafeToLinearHeading(FieldConstants.GPP_BLUE_ARTIFACT, FieldConstants.BLUE_ARTIFACT_ANGLE)
+        Action artifact3 = drive.actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
+            .strafeToLinearHeading(FCV2.GPP_BLUE_ARTIFACT, FCV2.BLUE_ARTIFACT_ANGLE)
 
 //            .setTangent(0)
-//            .splineToConstantHeading(FieldConstants.GPP_BLUE_ARTIFACT, +0.75*Math.PI)
+//            .splineToConstantHeading(FCV2.GPP_BLUE_ARTIFACT, +0.75*Math.PI)
             .waitSeconds(.2)
-            .lineToY(FieldConstants.GPP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST)
+            .lineToY(FCV2.GPP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST)
 
             .build();
 
-        Action artifact3_return = drive.actionBuilder(new Pose2d(FieldConstants.GPP_BLUE_ARTIFACT.x, FieldConstants.GPP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, FieldConstants.BLUE_ARTIFACT_ANGLE))
+        Action artifact3_return = drive.actionBuilder(new Pose2d(FCV2.GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST, FCV2.BLUE_ARTIFACT_ANGLE))
 
             //                .setReversed(true)
-            .strafeToLinearHeading(FieldConstants.BLUE_CLOSE_SHOOT, FieldConstants.BLUE_CLOSE_ANGLE)
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
 
             .build();
 
-        Action park = drive.actionBuilder(new Pose2d(GPP_BLUE_ARTIFACT.x, FieldConstants.GPP_BLUE_ARTIFACT.y+FieldConstants.ARTIFACT_DIST, BLUE_CLOSE_ANGLE))
+        Action park = drive.actionBuilder(new Pose2d(GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST, BLUE_CLOSE_ANGLE))
             .strafeTo(new Vector2d(PGP_BLUE_ARTIFACT.x, PGP_BLUE_ARTIFACT.y-5))
             .build();
 
@@ -166,15 +164,15 @@ public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
                 ),
 
                 robot.intake.stop(),
-//                new ParallelAction(
-//                    artifact3_return,
-//                    robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL)
-//                ),
+                new ParallelAction(
+                    artifact3_return,
+                    robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL)
+                ),
+                new SequentialAction(
+                    robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
+                    robot.intake.intakeTransferTimeAction(3)
+                ),
                 park
-//                new SequentialAction(
-////                    robot.outtake.shootVelocityAction(ARTIFACT_SHOOT_VEL),
-////                    robot.intake.intakeTransferTimeAction(2.5)
-//                )
 
 
             )

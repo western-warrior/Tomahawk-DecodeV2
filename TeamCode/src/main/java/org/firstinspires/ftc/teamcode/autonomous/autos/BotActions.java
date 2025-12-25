@@ -69,8 +69,8 @@
      public Action return_parallel(Action path) {
 
          return new ParallelAction(
-                 path,
-                 robot.outtake.reverseTimeAction(1)
+                 path
+                 //robot.outtake.reverseTimeAction(1)
          );
 
      }

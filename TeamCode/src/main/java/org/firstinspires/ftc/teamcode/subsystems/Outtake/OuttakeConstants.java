@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class OuttakeConstants {
     //TODO: Get positions
     public static int CLOSE_VELOCITY = 1100;
-    public static int FAR_VELOCITY = 1500;
+    public static int FAR_VELOCITY = 1355;
     public static int OFF_VELOCITY = 0;
 
 }

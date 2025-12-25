@@ -1,9 +1,9 @@
-package com.example.meepmeep;
+package org.firstinspires.ftc.teamcode.autonomous.autos;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 
-public interface FieldConstants {
+public interface FCV2 {
 
 
     double intake = 0;
@@ -58,8 +58,8 @@ public interface FieldConstants {
 
 
     // ======Gates======
-    Vector2d BLUE_GATE = new Vector2d(4, 55);
-    Vector2d RED_GATE = new Vector2d(4, -55);
+    Vector2d BLUE_GATE = new Vector2d(4, 68);
+    Vector2d RED_GATE = new Vector2d(4, -68);
 
     // ======STARTING POSITIONS======
     Pose2d RED_FAR_START = new Pose2d(-61.25, -5, Math.toRadians(0));
