@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.gamepad.GamepadMappings;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 //import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.drive.localizers.PinpointLocalizer;
 
@@ -14,18 +15,17 @@ public class GazelleFSM {
 
     private Intake intake;
     private Outtake outtake;
+    private Turret turret;
     private GamepadMappings controls;
     private Robot robot;
 //    private Turret turret;
     private Telemetry telemetry;
-    private PinpointLocalizer pinpoint;
     private GazelleState gazelleState;
     public GazelleFSM(Telemetry telemetry, GamepadMappings controls, Robot robot) {
         this.robot = robot;
         this.intake = robot.intake;
         this.outtake = robot.outtake;
-//        this.turret = robot.turret;
-        this.pinpoint = robot.pinpoint;
+        this.turret = robot.turret;
         this.controls = controls;
         this.telemetry = telemetry;
 

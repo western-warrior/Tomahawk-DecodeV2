@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
+import static org.firstinspires.ftc.teamcode.PoseStorage.goalX;
+import static org.firstinspires.ftc.teamcode.PoseStorage.goalY;
+
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,7 +25,7 @@ public class Outtake {
     MultipleTelemetry telemetry;
 
     // PIDF coefficients for flywheel velocity control
-    public static double P = 500, I = 0, D = 0, F = 14.3;
+    public static double P = 430, I = 0, D = 1, F = 14.8;
 
     // Hood control constants (tune these)
     public static double K = 0.05; // saturation rate for hood function
@@ -37,7 +42,6 @@ public class Outtake {
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motor1.setDirection(DcMotorEx.Direction.REVERSE);
-        motor2.setDirection(DcMotorEx.Direction.REVERSE);
 
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -77,7 +81,7 @@ public class Outtake {
      * Returns a servo position (0-1)
      */
     public double hoodCalc(double distance) {
-        double rawHood = MIN_HOOD + (MAX_HOOD - MIN_HOOD) * (1 - Math.exp(-K * (distance - T)));
+        double rawHood = Math.max(MIN_HOOD, Math.min(MAX_HOOD, distance * 0.01)); // this is a linear regression but we can change this if needed
         return Math.max(MIN_HOOD, Math.min(MAX_HOOD, rawHood));
     }
 
@@ -86,8 +90,7 @@ public class Outtake {
      * This is a tunable exponential formula
      */
     public int veloCalc(double distance, double hoodPos) {
-        // velocity decreases as hood increases (more lofted shot)
-        double velocity = 1500 - 400 / (1 + Math.exp(K * (distance - T)));
+        double velocity = 1680; // it lwk gonna stay the same cs we have hood
         return (int) velocity;
     }
 
@@ -96,7 +99,9 @@ public class Outtake {
      *
      * @return
      */
-    public int autoVelocity(double robotX, double robotY, double goalX, double goalY) {
+    public int autoVelocity(Pose2d pose) {
+        double robotX = pose.position.x;
+        double robotY = pose.position.y;
         double dx = goalX - robotX;
         double dy = goalY - robotY;
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -107,7 +112,7 @@ public class Outtake {
 
         // Velocity control
         int velocity = veloCalc(distance, hoodPos);
-        shootVelocity(velocity);
+//        shootVelocity(velocity);
 
         telemetry.addData("Distance", distance);
         telemetry.addData("Hood", hoodPos);

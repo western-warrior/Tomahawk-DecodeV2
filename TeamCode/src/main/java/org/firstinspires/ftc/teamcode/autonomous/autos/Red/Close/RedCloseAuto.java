@@ -5,17 +5,16 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.PoseStorage;
 import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
 import org.firstinspires.ftc.teamcode.autonomous.autos.FieldConstants;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 
 @Autonomous
 @Config
@@ -177,7 +176,9 @@ public class RedCloseAuto extends LinearOpMode implements FieldConstants {
             )
 
         );
-//         PoseStorage.currentPose = robot.pinpoint.getPose();
+        robot.drive.localizer.update();
+        PoseStorage.endPose = robot.drive.localizer.getPose();
+        PoseStorage.side = PoseStorage.SIDE.RED;
     }
 
 }

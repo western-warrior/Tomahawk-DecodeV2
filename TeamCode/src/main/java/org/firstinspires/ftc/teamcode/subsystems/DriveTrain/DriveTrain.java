@@ -16,16 +16,10 @@ public class DriveTrain {
     private final DcMotorEx bl;
     private final DcMotorEx br;
 
-    private final DcMotorEx[] motors;
-    private final DcMotorEx[] reversedMotors;
-
-    private final GamepadMappings controls;
 
     public State s = State.ROBOTCENTRIC;
 
-    public DriveTrain(HardwareMap hardwareMap, GamepadMappings controls) {
-
-        this.controls = controls;
+    public DriveTrain(HardwareMap hardwareMap) {
 
         fl = hardwareMap.get(DcMotorEx.class, "fl");
         fr = hardwareMap.get(DcMotorEx.class, "fr");
@@ -35,8 +29,8 @@ public class DriveTrain {
         // Correct IMU instantiation
         imu = new IMUGyro(hardwareMap);
 
-        motors = new DcMotorEx[]{fl, fr, bl, br};
-        reversedMotors = new DcMotorEx[]{bl, fl};
+        DcMotorEx[] motors = new DcMotorEx[]{fl, fr, bl, br};
+        DcMotorEx[] reversedMotors = new DcMotorEx[]{fl, bl};
 
         for (DcMotorEx motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -48,19 +42,21 @@ public class DriveTrain {
     }
 
     public void update() {
-        double x = controls.strafe;
-        double y = -controls.drive;
-        double rx = controls.turn;
+        if (s.equals(State.ROBOTCENTRIC)) {
+            double x = GamepadMappings.strafe;
+            double y = -GamepadMappings.drive;
+            double rx = GamepadMappings.turn;
 
-        double flPower = y + x + rx;
-        double frPower = y - x - rx;
-        double blPower = y - x + rx;
-        double brPower = y + x - rx;
+            double flPower = y + x + rx;
+            double frPower = y - x - rx;
+            double blPower = y - x + rx;
+            double brPower = y + x - rx;
 
-        fl.setPower(flPower);
-        fr.setPower(frPower);
-        bl.setPower(blPower);
-        br.setPower(brPower);
+            fl.setPower(flPower);
+            fr.setPower(frPower);
+            bl.setPower(blPower);
+            br.setPower(brPower);
+        }
     }
 
     public void addTelemetry() {
@@ -72,6 +68,6 @@ public class DriveTrain {
     }
 
     public enum State {
-        ROBOTCENTRIC
+        ROBOTCENTRIC, FIELDCENTRIC
     }
 }

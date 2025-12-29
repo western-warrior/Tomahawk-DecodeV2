@@ -1,19 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.pinpoint.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.gamepad.GamepadMappings;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain.DriveTrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 //import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
-import org.firstinspires.ftc.teamcode.drive.localizers.PinpointLocalizer;
-import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
 
 public class Robot {
@@ -24,18 +19,14 @@ public class Robot {
     public Intake transfer;
 
     public Turret turret;
-    public PinpointLocalizer pinpoint;
     public MecanumDrive drive;
     public Robot(HardwareMap hwMap, GamepadMappings controls) {
-        driveTrain = new DriveTrain(hwMap, controls);
+        driveTrain = new DriveTrain(hwMap);
         intake = new Intake(hwMap);
-       turret = new Turret(hwMap);
+        turret = new Turret(hwMap);
         outtake = new Outtake(hwMap);
         transfer = new Intake(hwMap);
-        pinpoint = new PinpointLocalizer(hwMap, 0.0025, PoseStorage.currentPose);
-        drive = new MecanumDrive(hwMap, new Pose2d(0, 0, 0));
-
-
+        drive = new MecanumDrive(hwMap, PoseStorage.endPose);
     }
 
 }

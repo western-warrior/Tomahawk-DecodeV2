@@ -51,7 +51,6 @@ public interface FCV2 {
     Vector2d PPG_BLUE_ARTIFACT = new Vector2d(12, 56);
     Vector2d HP_BLUE_ARTIFACT = new Vector2d(-60,58);
 
-
     // ====== BLUE Shooting Locations======
     Vector2d BLUE_CLOSE_SHOOT = new Vector2d(18, 18);
     Pose2d BLUE_FAR_SHOOT = new Pose2d(-61.25, -5, Math.toRadians(-90));

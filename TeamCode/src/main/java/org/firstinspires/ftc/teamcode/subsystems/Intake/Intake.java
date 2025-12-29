@@ -19,8 +19,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
 
-    private final DcMotorEx intakeMotor;
-    private final DcMotorEx transfer;
+    public final DcMotorEx intakeMotor;
+    public final DcMotorEx transfer;
     private final Telemetry telemetry;
 
     // Optional: pass telemetry if you want dashboard/logs
@@ -29,11 +29,12 @@ public class Intake {
 
         // Initialize motor
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize motor
         transfer = hardwareMap.get(DcMotorEx.class, "transfer");
-        transfer.setDirection(DcMotorSimple.Direction.REVERSE);
+        transfer.setDirection(DcMotorEx.Direction.REVERSE);
         transfer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }

@@ -86,6 +86,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
+import org.firstinspires.ftc.teamcode.subsystems.Outtake.Turret;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,24 +100,31 @@ public class AutoLock extends LinearOpMode {
 
     public void runOpMode() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        Intake intake = new Intake(hardwareMap, telemetry);
-        Outtake outtake = new Outtake(hardwareMap);
-        MecanumDrive drive = new MecanumDrive(this.hardwareMap, new Pose2d(0, 0, 0));
 
+        Turret turret = new Turret(hardwareMap);
+
+        MecanumDrive drive = null;
         waitForStart();
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            intake.intake();
-            intake.transferIn(1);
+            drive = new MecanumDrive(this.hardwareMap, new Pose2d(24, 24, 0));
             drive.localizer.update();
-            double distance = Math.sqrt(Math.pow(36 - drive.localizer.getPose().position.x, 2) + Math.pow(36 - drive.localizer.getPose().position.y, 2));
-            //int velocity = outtake.autoVelocity(distance);
-            //outtake.shootVelocity(velocity);
-            telemetry.addData("Dist", distance);
-           // telemetry.addData("Velocity", velocity);
+            telemetry.addData("X", drive.localizer.getPose().position.x);
+            telemetry.addData("Y", drive.localizer.getPose().position.y);
+            telemetry.addData("Heading", drive.localizer.getPose().heading.log());
+
+            turret.autoAlign(drive.localizer.getPose());
+
+            telemetry.addLine(turret.telemetryString());
+            telemetry.addData("LTarget", turret.leftServo.getTargetRotation());
+            telemetry.addData("RTarget", turret.rightServo.getTargetRotation());
+            telemetry.addData("LCurrent", turret.leftServo.getCurrentAngle());
+            telemetry.addData("RCurrent", turret.rightServo.getCurrentAngle());
             telemetry.update();
         }
+//        turret.leftServo.forceResetTotalRotation();
+//        turret.rightServo.forceResetTotalRotation();
     }
 
 

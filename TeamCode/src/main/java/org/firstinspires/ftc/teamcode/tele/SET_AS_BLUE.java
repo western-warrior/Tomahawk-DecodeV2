@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.PoseStorage;
 
 @TeleOp
-public class SET_AS_BLUEE extends LinearOpMode {
+public class SET_AS_BLUE extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {

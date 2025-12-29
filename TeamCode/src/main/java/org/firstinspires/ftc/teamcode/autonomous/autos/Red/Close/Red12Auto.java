@@ -10,8 +10,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.PoseStorage;
 import org.firstinspires.ftc.teamcode.autonomous.autos.BotActions;
-import org.firstinspires.ftc.teamcode.autonomous.autos.FCV2;
 import org.firstinspires.ftc.teamcode.autonomous.autos.FCV2;
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
@@ -180,6 +180,9 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
             )
 
         );
+        robot.drive.localizer.update();
+        PoseStorage.endPose = robot.drive.localizer.getPose();
+        PoseStorage.side = PoseStorage.SIDE.RED;
     }
 
 }

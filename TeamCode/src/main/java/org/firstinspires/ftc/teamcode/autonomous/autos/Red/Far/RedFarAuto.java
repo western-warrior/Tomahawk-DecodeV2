@@ -14,7 +14,7 @@
 
 // import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 // import org.firstinspires.ftc.teamcode.subsystems.Robot;
-// import org.firstinspires.ftc.teamcode.drive.PoseTransfer.PoseStorage;
+// import org.firstinspires.ftc.teamcode.PoseStorage;
 
 // @Autonomous
 // @Config
@@ -106,7 +106,9 @@
 //                 )
 //             )
 //         );
-//         PoseStorage.currentPose = robot.pinpoint.getPose();
+//         robot.pinpoint.update();
+//         PoseStorage.endPose = robot.pinpoint.getPose();
+//         PoseStorage.side = PoseStorage.SIDE.RED;
 //     }
 
 // }

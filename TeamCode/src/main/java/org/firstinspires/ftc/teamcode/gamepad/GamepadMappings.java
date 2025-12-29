@@ -40,8 +40,8 @@ public class GamepadMappings {
     public Toggle autoVelo;
     public Toggle turretLeft;
     public Toggle turretRight;
-public Toggle turretRed;
-public Toggle turretBlue;
+    public Toggle turretRed;
+    public Toggle turretBlue;
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
@@ -86,9 +86,9 @@ public Toggle turretBlue;
         turretLeft.update(gamepad2.dpad_left);
         turretRight.update(gamepad2.dpad_right);
         turretRed.update(gamepad2.b);
-        //turretBlue.update(gamepad2.x);
+        turretBlue.update(gamepad2.x);
 
-//        autoAim.update(gamepad1.dpad_up);
+        autoAim.update(gamepad1.dpad_up);
     }
 
     // v1 robot
