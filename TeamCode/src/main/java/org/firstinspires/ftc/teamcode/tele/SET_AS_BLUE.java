@@ -14,10 +14,12 @@ public class SET_AS_BLUE extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        set();
+    }
+
+    public static void set() {
         PoseStorage.side = PoseStorage.SIDE.BLUE;
         PoseStorage.goalX = 72;
         PoseStorage.goalY = 72;
-
-
     }
 }

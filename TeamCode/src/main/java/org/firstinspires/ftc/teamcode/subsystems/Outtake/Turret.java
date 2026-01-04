@@ -17,6 +17,7 @@ public class Turret {
     double angle = 0;
     double targetAngle = 0;
     double initialAngle;
+    public double calculatedAngle;
 
     CRServo left;
     CRServo right;
@@ -38,8 +39,9 @@ public class Turret {
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
+        calculatedAngle = (Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
 
-        setTargetAngle(Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
+        setTargetAngle(calculatedAngle);
     }
 
     // ---------------- Control ----------------
