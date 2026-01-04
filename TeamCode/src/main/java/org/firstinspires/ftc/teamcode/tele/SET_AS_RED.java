@@ -14,6 +14,10 @@ public class SET_AS_RED extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        set();
+    }
+
+    public static void set() {
         PoseStorage.side = PoseStorage.SIDE.RED;
         PoseStorage.goalX = 72;
         PoseStorage.goalY = -72;
