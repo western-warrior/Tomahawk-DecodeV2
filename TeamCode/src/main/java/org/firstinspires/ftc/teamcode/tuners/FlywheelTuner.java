@@ -52,7 +52,7 @@ public class FlywheelTuner extends LinearOpMode {
 
 //            flywheel.autoVelocity(drive.localizer.getPose());
 
-            flywheel.setVelocity(CLOSE_VELOCITY);
+            flywheel.setVelocity(VELOCITY);
 
             telemetry.addData("Transfer State", intake.transfer.getDirection());
             telemetry.addData("Intake State", intake.intakeMotor.getDirection());
