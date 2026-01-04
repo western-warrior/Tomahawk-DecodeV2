@@ -40,7 +40,6 @@ public class AutoLock extends LinearOpMode {
             drive.localizer.update();
             error = Math.abs((currentAngle - (initialAngle + targetAngle)) % 360);
             error = ((currentAngle < 180 && targetAngle > 180) || (currentAngle > 180 && targetAngle < 180)) ? 360 - error : error;
-//            targetAngle = turret.autoAlign(drive.localizer.getPose());
             power = 0.25 * Math.log1p(error);
             currentAngle = (servoEncoder.getVoltage() / 3.3 * 360) % 360;
 
@@ -49,7 +48,7 @@ public class AutoLock extends LinearOpMode {
                 left.setPower(0);
                 right.setPower(0);
             } else {
-                if ((currentAngle < 180 && targetAngle > 180) || (targetAngle < currentAngle && currentAngle < 180) || (targetAngle < currentAngle && currentAngle > 180 && targetAngle > 180)) {
+                if ((currentAngle < 180 && targetAngle > 180) || (targetAngle < currentAngle && currentAngle < 180) || (targetAngle < currentAngle && targetAngle > 180)) {
                     //go left
                     left.setPower(pwr);
                     right.setPower(pwr);
@@ -64,6 +63,7 @@ public class AutoLock extends LinearOpMode {
             telemetry.addData("Target Angle", targetAngle);
             telemetry.addData("Error", error);
             telemetry.addData("pwr", power);
+            telemetry.addData("Calculated Angle", turret.autoAlign(drive.localizer.getPose()));
             telemetry.update();
         }
     }
