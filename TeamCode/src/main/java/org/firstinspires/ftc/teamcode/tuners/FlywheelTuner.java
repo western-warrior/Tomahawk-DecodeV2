@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.pid.MiniPID;
@@ -19,7 +20,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake.Outtake;
 @Config
 public class FlywheelTuner extends LinearOpMode {
     public static double VELOCITY = 1680;
-    public static double POS = 0.2;
+    public static double POS = 0.86 ;
+    public static boolean autoVelo = false;
+    public static boolean intaking = true;
 
     public static double P = 430, I = 0, D = 1, F = 14.8;
 
@@ -30,8 +33,9 @@ public class FlywheelTuner extends LinearOpMode {
     public void runOpMode() {
         flywheel = new Outtake(hardwareMap);
         intake = new Intake(hardwareMap);
-        drive = new MecanumDrive(hardwareMap, new Pose2d(24, 24, 0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//        flywheel.hood.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -40,22 +44,35 @@ public class FlywheelTuner extends LinearOpMode {
             double currentVelocity = Math.abs(flywheel.getVelocity());
             double error = VELOCITY - currentVelocity;
             drive.localizer.update();
-            intake.intake();
-            intake.transferIn(1);
-            flywheel.hood.setPosition(POS);
-            telemetry.addData("Error", error);
-            telemetry.addData("Velocity", currentVelocity);
-            telemetry.addData("Set point", VELOCITY);
-
+            if (intaking) {
+                intake.intake();
+                intake.transferIn(1);
+            }
+            else {
+                intake.intakeStop();
+                intake.transferStop();
+            }
             flywheel.motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
             flywheel.motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
-//            flywheel.autoVelocity(drive.localizer.getPose());
-
-            flywheel.setVelocity(VELOCITY);
+            if (autoVelo) {
+                flywheel.autoVelocity(drive.localizer.getPose());
+            }
+            else {
+                flywheel.setVelocity(VELOCITY);
+                flywheel.hood.setPosition(POS);
+            }
 
             telemetry.addData("Transfer State", intake.transfer.getDirection());
             telemetry.addData("Intake State", intake.intakeMotor.getDirection());
+            telemetry.addData("Error", error);
+            telemetry.addData("Velocity", currentVelocity);
+            telemetry.addData("Set point", VELOCITY);
+            telemetry.addData("BotX", drive.localizer.getPose().position.x);
+            telemetry.addData("BotY", drive.localizer.getPose().position.y);
+            telemetry.addData("AutoVelo", flywheel.autoVelo);
+            telemetry.addData("AutoHoodPos", flywheel.autoHoodPos);
+            telemetry.addData("currentHoodPos", flywheel.currentHoodPos);
             telemetry.update();
         }
     }

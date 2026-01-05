@@ -17,6 +17,7 @@ public class Turret {
     double angle = 0;
     double targetAngle = 0;
     double initialAngle;
+    public double calculatedAngle;
 
     CRServo left;
     CRServo right;
@@ -32,15 +33,15 @@ public class Turret {
 
     // --------------- Auto-Align --------------
 
-    public double autoAlign(Pose2d pose) {
+    public void autoAlign(Pose2d pose) {
         double robotX = pose.position.x;
         double robotY = pose.position.y;
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
+        calculatedAngle = (Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
 
-//        setTargetAngle(Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
-        return Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble());
+        setTargetAngle(calculatedAngle);
     }
 
     // ---------------- Control ----------------
@@ -77,24 +78,24 @@ public class Turret {
     }
 
     public void update() {
-//        error = (angle > 180 && targetAngle > 180) ? (angle - (initialAngle + targetAngle)) % 360 : ((angle > 180 && targetAngle < 180) ? (360 - ((angle - (initialAngle + targetAngle))) % 360) : ((angle < 180 && targetAngle < 180) ? -((angle - (initialAngle + targetAngle)) % 360) : 360 + ((angle - (initialAngle + targetAngle)) % 360)));
-//        power = 0.25 * Math.log1p(error);
-//        angle = (encoder.getVoltage() / 3.3 * 360) % 360;
-//
-//        boolean boundsHittingLeft = angle > 180 && angle < 360 && targetAngle < 180;
-//        boolean boundsHittingRight = angle < 180 && angle > 0  && targetAngle > 180;
-//
-//        if (Math.abs(error) < 5 || Math.abs(Math.abs(error) - 360) < 5) {
-//            left.setPower(0);
-//            right.setPower(0);
-//        } else {
-//            if ((error > 180 || (error < 0 && error > -180) || (boundsHittingLeft)) && (!boundsHittingRight)) {
-//                left.setPower(power);
-//                right.setPower(power);
-//            } else {
-//                left.setPower(-power);
-//                right.setPower(-power);
-//            }
-//        }
+        error = (angle > 180 && targetAngle > 180) ? (angle - (initialAngle + targetAngle)) % 360 : ((angle > 180 && targetAngle < 180) ? (360 - ((angle - (initialAngle + targetAngle))) % 360) : ((angle < 180 && targetAngle < 180) ? -((angle - (initialAngle + targetAngle)) % 360) : 360 + ((angle - (initialAngle + targetAngle)) % 360)));
+        power = 0.25 * Math.log1p(error);
+        angle = (encoder.getVoltage() / 3.3 * 360) % 360;
+
+        boolean boundsHittingLeft = angle > 180 && angle < 360 && targetAngle < 180;
+        boolean boundsHittingRight = angle < 180 && angle > 0  && targetAngle > 180;
+
+        if (Math.abs(error) < 5 || Math.abs(Math.abs(error) - 360) < 5) {
+            left.setPower(0);
+            right.setPower(0);
+        } else {
+            if ((error > 180 || (error < 0 && error > -180) || (boundsHittingLeft)) && (!boundsHittingRight)) {
+                left.setPower(power);
+                right.setPower(power);
+            } else {
+                left.setPower(-power);
+                right.setPower(-power);
+            }
+        }
     }
 }

@@ -16,6 +16,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Outtake {
     public DcMotorEx motor1;
     public DcMotorEx motor2;
@@ -31,6 +34,10 @@ public class Outtake {
     public static double T = 120;  // distance offset for hood function
     public static double MIN_HOOD = 0.2;  // servo min (0-1)
     public static double MAX_HOOD = 0.8;  // servo max (0-1)
+    public static double hoodOffset = 0.25;
+    public double autoHoodPos;
+    public double autoVelo;
+    public double currentHoodPos;
 
     public Outtake(HardwareMap hardwareMap) {
         motor1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
@@ -79,16 +86,27 @@ public class Outtake {
      * Returns a servo position (0-1)
      */
     public double hoodCalc(double distance) {
-        double rawHood = Math.max(MIN_HOOD, Math.min(MAX_HOOD, distance * 0.01)); // this is a linear regression but we can change this if needed
-        return Math.max(MIN_HOOD, Math.min(MAX_HOOD, rawHood));
+        double rawHood = -3.76768E-8 * Math.pow(distance, 4)
+                + 0.0000154024 * Math.pow(distance, 3)
+                - 0.00226345 * Math.pow(distance, 2)
+                + 0.142616 * distance
+                - 2.70691;
+        BigDecimal bd = new BigDecimal(Double.toString(rawHood));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        double roundHood =  bd.doubleValue();
+        return Math.min(Math.max(0.2, roundHood), 0.75);
     }
 
     /**
-     * Calculates flywheel velocity based on distance and hood
+     * Calculates flywheel velocity based on distance and hoodvelocity
      * This is a tunable exponential formula
      */
-    public int veloCalc(double distance, double hoodPos) {
-        double velocity = 1680; // it lwk gonna stay the same cs we have hood
+    public int veloCalc(double distance) {
+        double velocity = 0.00000128898 * Math.pow(distance, 4)
+                + 0.000774931 * Math.pow(distance, 3)
+                - 0.302351 * Math.pow(distance, 2)
+                + 34.96837 * distance
+                + 248.70575;
         return (int) velocity;
     }
 
@@ -103,16 +121,18 @@ public class Outtake {
         double distance = Math.sqrt(dx * dx + dy * dy);
 
         // Hood control
-        double hoodPos = hoodCalc(distance);
+        double hoodPos = (hoodCalc(distance))-hoodOffset;
         hood.setPosition(hoodPos);
+        autoHoodPos = hoodPos;
 
         // Velocity control
-        int velocity = veloCalc(distance, hoodPos);
+        int velocity = veloCalc(distance);
         shootVelocity(velocity);
+        autoVelo = velocity;
+
+        currentHoodPos = hood.getPosition();
 
         telemetry.addData("Distance", distance);
-        telemetry.addData("Hood", hoodPos);
-        telemetry.addData("Velocity", velocity);
     }
 
     //============== ACTIONS =============
@@ -133,11 +153,11 @@ public class Outtake {
                 hood.setPosition(hoodPos);
 
                 // Flywheel
-                int velocity = veloCalc(distance, hoodPos);
+                int velocity = veloCalc(distance);
                 shootVelocity(velocity);
 
                 telemetryPacket.put("Distance", distance);
-                telemetryPacket.put("Hood", hoodPos);
+                telemetryPacket.put("Hood", hood.getPosition());
                 telemetryPacket.put("Velocity", velocity);
 
                 // Return true if flywheel is at target (within 50 rpm)
@@ -172,7 +192,7 @@ public class Outtake {
                     hood.setPosition(hoodPos);
 
                     // Flywheel
-                    int velocity = veloCalc(distance, hoodPos);
+                    int velocity = veloCalc(distance);
                     shootVelocity(velocity);
 
                     telemetryPacket.put("Distance", distance);
