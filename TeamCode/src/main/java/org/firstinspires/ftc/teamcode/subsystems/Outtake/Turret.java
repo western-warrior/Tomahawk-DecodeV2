@@ -33,15 +33,15 @@ public class Turret {
 
     // --------------- Auto-Align --------------
 
-    public void autoAlign(Pose2d pose) {
+    public double autoAlign(Pose2d pose) {
         double robotX = pose.position.x;
         double robotY = pose.position.y;
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
         calculatedAngle = (Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
-
-        setTargetAngle(calculatedAngle);
+        return calculatedAngle;
+//        setTargetAngle(calculatedAngle);
     }
 
     // ---------------- Control ----------------
