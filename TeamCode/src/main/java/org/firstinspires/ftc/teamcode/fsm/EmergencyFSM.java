@@ -23,7 +23,7 @@ public class EmergencyFSM {
     private GazelleState gazelleState;
     private Intake transfer;
 
-    public static int velocity = 1600;
+    public static int velocity = 1580;
     public EmergencyFSM(Telemetry telemetry, GamepadMappings controls, Robot robot) {
         this.robot = robot;
         this.intake = robot.intake;
@@ -44,6 +44,7 @@ public class EmergencyFSM {
         // ---------------- Outtake / Flywheel ----------------
         if (controls.flywheelClose.value()) {
             outtake.shootVelocity(OuttakeConstants.CLOSE_VELOCITY);
+            outtake.hood.setPosition(OuttakeConstants.CLOSE_HOOD);
         } else if (controls.flywheelFar.value()) {
             outtake.shootVelocity(OuttakeConstants.FAR_VELOCITY);
         } else if (controls.autoVelo.value()) {
@@ -54,7 +55,7 @@ public class EmergencyFSM {
         }
 
         // ---------------- Intake / Transfer ----------------
-        if (controls.intake.locked()) {
+        if (controls.intake.locked() || controls.intake2.locked()) {
             intake.intake();
             transfer.setPower(0);
         } else if (controls.intakeReverse.locked()) {

@@ -14,7 +14,7 @@ public class Turret {
 
     double power = 0;
     double error = 0;
-    double angle = 0;
+    double currentAngle = 0;
     double targetAngle = 0;
     double initialAngle;
     public double calculatedAngle;
@@ -27,8 +27,8 @@ public class Turret {
     public Turret(HardwareMap hwMap) {
         left = hwMap.get(CRServo.class, "turretLeft");
         right = hwMap.get(CRServo.class, "turretRight");
-        encoder = hwMap.get(AnalogInput.class, "turretEncoder");
-        initialAngle = encoder.getVoltage() / 3.3 * 360;
+        encoder = hwMap.get(AnalogInput.class, "turretEncoderRight");
+        initialAngle = 0;
     }
 
     // --------------- Auto-Align --------------
@@ -39,7 +39,7 @@ public class Turret {
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
-        calculatedAngle = (Math.toDegrees(Math.atan2(deltaX, deltaY) - pose.heading.toDouble()));
+        calculatedAngle = (Math.toDegrees(Math.atan2(deltaX, deltaY)) - Math.toDegrees(pose.heading.toDouble()));
         return calculatedAngle;
 //        setTargetAngle(calculatedAngle);
     }
@@ -57,8 +57,8 @@ public class Turret {
         targetAngle += a;
     }
 
-    public double getAngle() {
-        return angle;
+    public double getCurrentAngle() {
+        return currentAngle;
     }
 
     public double getError() {
@@ -78,24 +78,22 @@ public class Turret {
     }
 
     public void update() {
-        error = (angle > 180 && targetAngle > 180) ? (angle - (initialAngle + targetAngle)) % 360 : ((angle > 180 && targetAngle < 180) ? (360 - ((angle - (initialAngle + targetAngle))) % 360) : ((angle < 180 && targetAngle < 180) ? -((angle - (initialAngle + targetAngle)) % 360) : 360 + ((angle - (initialAngle + targetAngle)) % 360)));
-        power = 0.25 * Math.log1p(error);
-        angle = (encoder.getVoltage() / 3.3 * 360) % 360;
+        currentAngle = -(((encoder.getVoltage() / 3.3 * 360) % 360) - 180);
+        targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle;
 
-        boolean boundsHittingLeft = angle > 180 && angle < 360 && targetAngle < 180;
-        boolean boundsHittingRight = angle < 180 && angle > 0  && targetAngle > 180;
+        error = (targetAngle - currentAngle) % 360;
+        power = 0.2 * Math.log(1+Math.abs(error)) / Math.log(10);
 
         if (Math.abs(error) < 5 || Math.abs(Math.abs(error) - 360) < 5) {
-            left.setPower(0);
-            right.setPower(0);
+            power = 0;
         } else {
-            if ((error > 180 || (error < 0 && error > -180) || (boundsHittingLeft)) && (!boundsHittingRight)) {
-                left.setPower(power);
-                right.setPower(power);
-            } else {
-                left.setPower(-power);
-                right.setPower(-power);
+            if (!((error < 0))) {
+                //go clockwise
+                power = -power;
             }
         }
+
+        if (enabled) left.setPower(power); else left.setPower(0);
+        if (enabled) right.setPower(power); else right.setPower(0);
     }
 }

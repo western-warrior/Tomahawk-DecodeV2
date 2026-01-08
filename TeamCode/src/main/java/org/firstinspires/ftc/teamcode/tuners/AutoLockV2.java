@@ -27,7 +27,7 @@ public class AutoLockV2 extends LinearOpMode {
         Turret turret = new Turret(hardwareMap);
         CRServo left = hardwareMap.get(CRServo.class, "turretLeft");
         CRServo right = hardwareMap.get(CRServo.class, "turretRight");
-        AnalogInput servoEncoder = hardwareMap.get(AnalogInput.class, "turretEncoder");
+        AnalogInput servoEncoder = hardwareMap.get(AnalogInput.class, "turretEncoderLeft");
         MecanumDrive drive = new MecanumDrive(this.hardwareMap, new Pose2d(24, 24, 0));
 
         double initialAngle = 0;
