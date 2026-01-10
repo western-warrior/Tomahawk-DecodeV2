@@ -39,7 +39,7 @@ public class Turret {
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
-        calculatedAngle = Math.toDegrees(Math.atan2(deltaY * 1.05, deltaX)) - Math.toDegrees(pose.heading.toDouble());
+        calculatedAngle = Math.toDegrees(Math.atan2(deltaY * 1.15, deltaX * 1.15)) - Math.toDegrees(pose.heading.toDouble());
 
         return calculatedAngle;
 //        setTargetAngle(calculatedAngle);
