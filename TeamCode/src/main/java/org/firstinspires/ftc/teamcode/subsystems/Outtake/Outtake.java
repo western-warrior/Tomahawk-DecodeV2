@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
+
 import static org.firstinspires.ftc.teamcode.PoseStorage.goalX;
 import static org.firstinspires.ftc.teamcode.PoseStorage.goalY;
+
 
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -17,8 +19,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 
 public class Outtake {
     public DcMotorEx motor1;
@@ -27,8 +31,10 @@ public class Outtake {
     public double SETPOINT;
     MultipleTelemetry telemetry;
 
+
     // PIDF coefficients for flywheel velocity control
     public static double P = 430, I = 0, D = 1, F = 14.8;
+
 
     // Hood control constants (tune these)
     public static double K = 0.05; // saturation rate for hood function
@@ -39,6 +45,8 @@ public class Outtake {
     public double autoHoodPos;
     public double autoVelo;
     public double currentHoodPos;
+    public double distance;
+
 
     public Outtake(LinearOpMode mode) {
         this.telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), mode.telemetry);
@@ -46,19 +54,25 @@ public class Outtake {
         motor2 = mode.hardwareMap.get(DcMotorEx.class, "flywheel2");
         hood = mode.hardwareMap.get(Servo.class, "hood");
 
+
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         motor1.setDirection(DcMotorEx.Direction.REVERSE);
+
 
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
         motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
         motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
+
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry());
     }
+
 
     public void setVelocity(double velocity) {
         motor1.setVelocity(velocity);
@@ -69,8 +83,12 @@ public class Outtake {
         motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
 
+
+
         motor1.setVelocity(velocity);
         motor2.setVelocity(velocity);
+
+
 
 
     }
@@ -79,25 +97,37 @@ public class Outtake {
         motor2.setPower(0);
     }
 
+
     public double getVelocity() {
         return (motor1.getVelocity() + motor2.getVelocity()) / 2.0;
     }
+
 
     /**
      * Automatic hood calculation based on distance to goal
      * Returns a servo position (0-1)
      */
     public double hoodCalc(double distance) {
-        double rawHood = -3.76768E-8 * Math.pow(distance, 4)
-                + 0.0000154024 * Math.pow(distance, 3)
-                - 0.00226345 * Math.pow(distance, 2)
-                + 0.142616 * distance
-                - 2.70691;
+//        double rawHood = -0.00000302855 * Math.pow(distance, 3)
+//                + 0.000980401 * Math.pow(distance, 2)
+//                - 0.10017 * distance
+//                + 3.92985;
+        double rawHood = 0.0000767983 * Math.pow(distance, 2) - 0.0144138 * distance + 1.34219;
         BigDecimal bd = new BigDecimal(Double.toString(rawHood));
         bd = bd.setScale(2, RoundingMode.HALF_UP);
-        double roundHood =  bd.doubleValue();
-        return Math.min(Math.max(0.2, roundHood), 0.75);
+        autoHoodPos = Math.min(Math.max(0.2, bd.doubleValue()), 0.86);
+        return autoHoodPos;
     }
+
+
+    public double distCalc(Pose2d pose) {
+        double robotX = pose.position.x;
+        double robotY = pose.position.y;
+        double dx = goalX - robotX;
+        double dy = goalY - robotY;
+        return Math.sqrt((dx * dx) + (dy * dy));
+    }
+
 
     /**
      * Calculates flywheel velocity based on distance and hoodvelocity
@@ -105,12 +135,13 @@ public class Outtake {
      */
     public int veloCalc(double distance) {
         double velocity = 0.00000128898 * Math.pow(distance, 4)
-                + 0.000774931 * Math.pow(distance, 3)
-                - 0.302351 * Math.pow(distance, 2)
-                + 34.96837 * distance
-                + 248.70575;
+            + 0.000774931 * Math.pow(distance, 3)
+            - 0.302351 * Math.pow(distance, 2)
+            + 34.96837 * distance
+            + 248.70575;
         return (int) velocity;
     }
+
 
     /**
      * Automatic velocity + hood control
@@ -120,22 +151,35 @@ public class Outtake {
         double robotY = pose.position.y;
         double dx = goalX - robotX;
         double dy = goalY - robotY;
-        double distance = Math.sqrt(dx * dx + dy * dy);
+        distance = distCalc(pose);
 
-        // Hood control
-        double hoodPos = (hoodCalc(distance))-hoodOffset;
-        hood.setPosition(hoodPos);
-        autoHoodPos = hoodPos;
+
+//        // Hood control
+//        double hoodPos = (hoodCalc(distance))-hoodOffset;
+//        hood.setPosition(hoodPos);
+//        autoHoodPos = hoodPos;
+
+
+        if (distance > 100) {//far
+            shootVelocity(OuttakeConstants.FAR_VELOCITY);
+            hood.setPosition(hoodCalc(distance));
+        }
+        else {//close
+            shootVelocity(OuttakeConstants.CLOSE_VELOCITY);
+            hood.setPosition(hoodCalc(distance));
+        }
+
 
         // Velocity control
-        int velocity = veloCalc(distance);
-        shootVelocity(velocity);
-        autoVelo = velocity;
+//        int velocity = veloCalc(distance);
+//        shootVelocity(velocity);
+//        autoVelo = velocity;
+
 
         currentHoodPos = hood.getPosition();
-
         telemetry.addData("Distance", distance);
     }
+
 
     //============== ACTIONS =============
     public Action autoVelocityAction(double robotX, double robotY, double goalX, double goalY) {
@@ -145,22 +189,28 @@ public class Outtake {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 if (!init) init = true;
 
+
                 // Compute distance
                 double dx = goalX - robotX;
                 double dy = goalY - robotY;
-                double distance = Math.sqrt(dx*dx + dy*dy);
+                double distance = distCalc(new Pose2d(robotX, robotY, 0));
+
 
                 // Hood
                 double hoodPos = hoodCalc(distance);
                 hood.setPosition(hoodPos);
 
+
                 // Flywheel
                 int velocity = veloCalc(distance);
                 shootVelocity(velocity);
 
-                telemetryPacket.put("Distance", distance);
+
+
+
                 telemetryPacket.put("Hood", hood.getPosition());
                 telemetryPacket.put("Velocity", velocity);
+
 
                 // Return true if flywheel is at target (within 50 rpm)
                 double error = Math.abs(getVelocity() - velocity);
@@ -170,11 +220,13 @@ public class Outtake {
         };
     }
 
-    // Automatic velocity + hood action with time limit
-    public Action autoVelocityTimeAction(double robotX, double robotY, double goalX, double goalY, double timeLimit) {
+
+    // Automatic velocity + hood action with time limitsetVeloc
+    public Action shootVelocityTimeAction(int velocity, double time) {
         return new Action() {
             private boolean init = false;
             ElapsedTime timer = new ElapsedTime();
+
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -183,19 +235,73 @@ public class Outtake {
                     timer.reset();
                 }
 
+
+                if (timer.seconds() < time) {
+                    shootVelocity(velocity);
+                } else {
+                    shootStop();
+                }
+
+
+                return timer.seconds() >= time;
+            }
+        };
+    }
+    public Action shootVelocityAction(int velocity) {
+        return new Action() {
+
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+
+                motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+                motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
+
+
+
+
+                motor1.setVelocity(velocity);
+                motor2.setVelocity(velocity);
+
+
+                double error = Math.abs(getVelocity() - velocity);
+                telemetryPacket.put("Error", error);
+                return error < 50;
+            }
+        };
+    }
+
+    public Action autoVelocityTimeAction(double robotX, double robotY, double goalX, double goalY, double timeLimit) {
+        return new Action() {
+            private boolean init = false;
+            ElapsedTime timer = new ElapsedTime();
+
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (!init) {
+                    init = true;
+                    timer.reset();
+                }
+
+
                 if (timer.seconds() < timeLimit) {
                     // Compute distance
                     double dx = goalX - robotX;
                     double dy = goalY - robotY;
                     double distance = Math.sqrt(dx*dx + dy*dy);
 
+
                     // Hood
                     double hoodPos = hoodCalc(distance);
                     hood.setPosition(hoodPos);
 
+
                     // Flywheel
                     int velocity = veloCalc(distance);
                     shootVelocity(velocity);
+
 
                     telemetryPacket.put("Distance", distance);
                     telemetryPacket.put("Hood", hoodPos);
@@ -204,70 +310,30 @@ public class Outtake {
                     shootStop();
                 }
 
+
                 return timer.seconds() >= timeLimit;
             }
         };
     }
-    public Action shootVelocityAction(int velocity) {
-        return new Action() {
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-                motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
-                motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
 
-                motor1.setVelocity(velocity);
-                motor2.setVelocity(velocity);
 
-                double error = Math.abs(getVelocity() - velocity);
-                telemetryPacket.put("Error", error);
-                return error >= 50;
-            }
-        };
-    }
-
-    public Action shootVelocityTimeAction(int velocity, double seconds) {
-        return new Action() {
-            ElapsedTime t = new ElapsedTime();
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                double v = velocity;
-
-                motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
-                motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
-
-
-                motor1.setVelocity(v);
-                motor2.setVelocity(v);
-
-
-                double error = Math.abs(getVelocity() - velocity);
-                telemetryPacket.put("Error", error);
-                telemetryPacket.put("time", t.seconds());
-
-                return (error >= 50 || t.seconds() < seconds);
-            }
-        };
-    }
 
     public Action stopAction() {
-        return new Action() {
+        return  new Action() {
+
 
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                motor1.setPower(0);
+                motor2.setPower(0);
 
-                motor1.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
-                motor2.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
 
-
-                motor1.setVelocity(0);
-                motor2.setVelocity(0);
-
-                return false;
+                return true;
             }
         };
     }
 }
+
+
+

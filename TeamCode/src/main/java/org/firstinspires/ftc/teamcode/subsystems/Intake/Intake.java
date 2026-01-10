@@ -49,6 +49,7 @@ public class Intake {
     // Motor controls
     public void intake() {
         intakeMotor.setPower(1);
+        transfer.setPower(0);
     }
 
     public void intakeReverse() {
@@ -92,7 +93,6 @@ public class Intake {
                     return true;
                 } else {
                     intakeStop();
-                    transferStop();
                     return false;
                 }
             }
@@ -135,6 +135,43 @@ public class Intake {
         };
     }
 
+    public Action transferTimeAction(double seconds) {
+        return new Action() {
+            ElapsedTime t = new ElapsedTime();
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                transferIn(1);
+                return (t.seconds() < seconds);
+            }
+        };
+    }
+
+    public Action transferReverseAction() {
+        return new Action() {
+            ElapsedTime t = new ElapsedTime();
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                transferOut(1);
+//                return (t.seconds() < seconds);
+                return false;
+            }
+        };
+    }
+
+    public Action transferStopAction() {
+        return new Action() {
+            ElapsedTime t = new ElapsedTime();
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                transferIn(0);
+                return false;
+            }
+        };
+    }
+
     public Action stop() {
         return new Action() {
             @Override
@@ -150,7 +187,7 @@ public class Intake {
         return transfer.getPower();
     }
 
-    public void setPower(int i) {
+    public void setPower(double i) {
         transfer.setPower(i);
     }
 }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,9 +10,12 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.PoseStorage;
 
+@Config
 public class Turret {
 
-    private boolean enabled = true; // allow manual override
+    public boolean enabled = true; // allow manual override
+    public double MULTIPLIER = 1;
+    public double TOLERANCE = 1;
 
     double power = 0;
     double error = 0;
@@ -40,7 +44,7 @@ public class Turret {
 
         double deltaX = PoseStorage.goalX - robotX;
         double deltaY = PoseStorage.goalY - robotY;
-        calculatedAngle = Math.toDegrees(Math.atan2(deltaY * 1.15, deltaX * 1.15)) - Math.toDegrees(pose.heading.toDouble());
+        calculatedAngle = Math.toDegrees(Math.atan2(deltaY * MULTIPLIER, deltaX * MULTIPLIER)) - Math.toDegrees(pose.heading.toDouble());
         setTargetAngle(calculatedAngle);
         return calculatedAngle;
     }
@@ -75,7 +79,7 @@ public class Turret {
     }
 
     public boolean isAtTarget() {
-        return error < 5;
+        return Math.abs(error) < TOLERANCE || Math.abs(Math.abs(error) - 360) < TOLERANCE;
     }
 
     public void update() {
@@ -85,7 +89,7 @@ public class Turret {
         error = (targetAngle - currentAngle) % 360;
         power = 0.2 * Math.log(1+Math.abs(error)) / Math.log(10);
 
-        if (Math.abs(error) < 3 || Math.abs(Math.abs(error) - 360) < 3) {
+        if (isAtTarget()) {
             power = 0;
         } else {
             if ((error < 0)) {

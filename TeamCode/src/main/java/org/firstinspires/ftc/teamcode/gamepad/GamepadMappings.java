@@ -40,10 +40,7 @@ public class GamepadMappings {
     public Toggle flywheelOff;
     public Toggle autoAim;
     public Toggle autoVelo;
-    public Toggle turretLeft;
-    public Toggle turretRight;
-    public Toggle turretRed;
-    public Toggle turretBlue;
+    public Toggle turretAuto;
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
@@ -63,11 +60,8 @@ public class GamepadMappings {
         flywheelOff = new Toggle(false);
         autoAim = new Toggle(false);
         autoVelo = new Toggle(false);
-        turretLeft = new Toggle(false);
-        turretRight = new Toggle(false);
-        turretRed = new Toggle(false);
-        turretBlue = new Toggle(false);
 
+        turretAuto = new Toggle(false);
     }
 
     public void joystickUpdate() {
@@ -88,13 +82,8 @@ public class GamepadMappings {
         flywheelClose.update(gamepad2.a);
         flywheelFar.update(gamepad2.y);
         //flywheelOff.update(gamepad2.b);
-        autoVelo.update(gamepad1.left_bumper);
-        turretLeft.update(gamepad2.dpad_left);
-        turretRight.update(gamepad2.dpad_right);
-        turretRed.update(gamepad2.b);
-        turretBlue.update(gamepad2.x);
-
-        autoAim.update(gamepad1.dpad_up);
+        autoVelo.update(gamepad2.left_bumper);
+        turretAuto.update(gamepad1.ps);
     }
 
     // v1 robot
@@ -106,6 +95,7 @@ public class GamepadMappings {
 //        servoBlocker.update(gamepad1.left_bumper);
         transferReverse.update(gamepad1.left_bumper);
         transfer.update(gamepad1.right_bumper || gamepad2.right_bumper);
+
 
         intakeReverseUpdate();
         outtakeUpdate();

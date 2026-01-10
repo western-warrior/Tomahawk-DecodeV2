@@ -71,8 +71,7 @@ public interface FCV2 {
     Pose2d RED_CLOSE_START = new Pose2d(57, -45, Math.toRadians(306));
 
     Pose2d BLUE_FAR_START = new Pose2d(-61.25, 5, Math.toRadians(0));
-
-    Pose2d BLUE_CLOSE_START = new Pose2d(57, 45, Math.toRadians(53));
+    Pose2d BLUE_CLOSE_START = new Pose2d(52, 57, Math.toRadians(53));
 
     Pose2d BLUE_GOAL_START = new Pose2d(-47.5, 51.5,  Math.toRadians(323));
 }

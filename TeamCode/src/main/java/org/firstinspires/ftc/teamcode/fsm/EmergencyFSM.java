@@ -16,22 +16,21 @@ public class EmergencyFSM {
     private Intake intake;
     private Outtake outtake;
 //    private RTPAxon turret;           // turret controlled by RTPAxon
-    private Turret turret;
-    private Robot robot;
-    private GamepadMappings controls;
-    private Telemetry telemetry;
+    private final Turret turret;
+    private final Robot robot;
+    private final GamepadMappings controls;
+    private final Telemetry telemetry;
     private GazelleState gazelleState;
-    private Intake transfer;
-
+    private final Intake transfer;
     public static int velocity = 1580;
     public EmergencyFSM(Telemetry telemetry, GamepadMappings controls, Robot robot) {
         this.robot = robot;
         this.intake = robot.intake;
         this.turret = robot.turret;
         this.outtake = robot.outtake;
+        this.transfer = robot.transfer;
         this.controls = controls;
         this.telemetry = telemetry;
-        this.transfer = robot.transfer;
         this.gazelleState = GazelleState.BASE_STATE;
     }
 
@@ -53,6 +52,14 @@ public class EmergencyFSM {
             outtake.shootVelocity(OuttakeConstants.OFF_VELOCITY);
         }
 
+        // ---------------------- Turret ----------------------
+        if (controls.turretAuto.value() || controls.flywheelClose.value() || controls.flywheelFar.value() || controls.autoVelo.value()) {
+            turret.update();
+        } else {
+            turret.setTargetAngle(0);
+            turret.update();
+        }
+
         // ---------------- Intake / Transfer ----------------
         if (controls.intake.locked() || controls.intake2.locked()) {
             intake.intake();
@@ -67,24 +74,6 @@ public class EmergencyFSM {
             intake.intakeStop();
             transfer.setPower(0);
         }
-
-        // ---------------- Turret control ----------------
-//        if (turret != null) {
-//            boolean autoAim = true; // always auto-aim at the current target color
-//
-//            if (autoAim) {
-////                turret.autoAlign(robot.drive.localizer.getPose());
-//            } else {
-//                // Manual control
-//                double power = 0;
-//                if (controls.turretLeft.locked()) turret.changeTargetAngle(-20);
-//                else if (controls.turretRight.locked()) turret.changeTargetAngle(20);
-//
-//
-//            }
-//
-//            turret.update(); // always update PID / rotation
-//        }
 
         // ---------------- FSM State Updates ----------------
         switch (gazelleState) {

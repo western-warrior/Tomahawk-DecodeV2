@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.drive.localizers.PinpointLocalizer;
 
 
 public class GazelleFSM {
-
     private Intake intake;
     private Outtake outtake;
     private Turret turret;

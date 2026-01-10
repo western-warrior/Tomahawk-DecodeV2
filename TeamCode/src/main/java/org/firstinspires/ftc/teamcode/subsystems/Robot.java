@@ -19,7 +19,6 @@ public class Robot {
     public Intake intake;
     public Outtake outtake;
     public Intake transfer;
-
     public Turret turret;
     public MecanumDrive drive;
     public Robot(LinearOpMode mode) {

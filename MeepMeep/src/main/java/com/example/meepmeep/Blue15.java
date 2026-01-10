@@ -29,63 +29,89 @@ public class Blue15 {
                 .build();
 
         Action preload = drive.getDrive().actionBuilder(FCV2.BLUE_CLOSE_START)
-                .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
-                .build();
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
+            .build();
 
         Action artifact1 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
-                .strafeToLinearHeading(new Vector2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
-                .strafeTo(FCV2.PGP_BLUE_ARTIFACT)
-                .build();
+            .strafeToLinearHeading(new Vector2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
+            .strafeTo(FCV2.PGP_BLUE_ARTIFACT)
+            .build();
 
         Action artifact1_return = drive.getDrive().actionBuilder(new Pose2d(FCV2.PGP_BLUE_ARTIFACT, FCV2.BLUE_ARTIFACT_ANGLE))
 
-//                .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
             .setTangent(Math.toRadians(285))
             .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), Math.toRadians(45))
-                .waitSeconds(0.85)
+            .waitSeconds(0.85)
 
-                .build();
+            .build();
 
 
         Action artifact2 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
-                .strafeToLinearHeading(new Vector2d(FCV2.PPG_BLUE_ARTIFACT.x, FCV2.PPG_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
-                .strafeTo(FCV2.PPG_BLUE_ARTIFACT)
-                .build();
+            .strafeToLinearHeading(new Vector2d(FCV2.PPG_BLUE_ARTIFACT.x, FCV2.PPG_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
+            .strafeTo(FCV2.PPG_BLUE_ARTIFACT)
+            .build();
 
         Action artifact2_return = drive.getDrive().actionBuilder(new Pose2d(FCV2.PPG_BLUE_ARTIFACT.x, FCV2.PPG_BLUE_ARTIFACT.y, FCV2.BLUE_ARTIFACT_ANGLE))
 
-                .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
-                .build();
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
+            .build();
 
         Action gate_score = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
+            .setTangent(Math.toRadians(180))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE.x - 10, FCV2.BLUE_GATE.y, Math.toRadians(90)), Math.toRadians(90))
+            .setTangent(Math.toRadians(180))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE_INTAKE.x - 10, 60, 0), Math.toRadians(90))
+            .strafeToConstantHeading(new Vector2d(FCV2.BLUE_GATE_INTAKE.x - 6, 60))
+            .build();
+
+        Action gate_return = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_GATE_INTAKE.x - 6, 60, Math.toRadians(90)))
+            .setTangent(Math.toRadians(270))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), Math.toRadians(45))
+
+            .build();
+
+        Action gate_score2 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
+            .setTangent(Math.toRadians(180))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE.x - 10, FCV2.BLUE_GATE.y, Math.toRadians(90)), Math.toRadians(90))
+            .setTangent(Math.toRadians(180))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE_INTAKE.x - 10, 60, 0), Math.toRadians(90))
+            .strafeToConstantHeading(new Vector2d(FCV2.BLUE_GATE_INTAKE.x - 6, 60))
+            .build();
+
+        Action gate_return2 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_GATE_INTAKE.x - 6, 60, Math.toRadians(90)))
+            .setTangent(Math.toRadians(270))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), Math.toRadians(45))
+
+            .build();
+
+
+        Action gate_score3 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE))
 //                .strafeToLinearHeading(FCV2.BLUE_GATE_INTAKE, FCV2.BLUE_GATE_INTAKE_ANGLE)
-                .setTangent(Math.toRadians(285))
-                .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE_INTAKE.x, FCV2.BLUE_GATE_INTAKE.y, FCV2.BLUE_CLOSE_ANGLE), Math.toRadians(47))
-                .build();
+            .setTangent(Math.toRadians(285))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_GATE_INTAKE.x, FCV2.BLUE_GATE_INTAKE.y, FCV2.BLUE_CLOSE_ANGLE), FCV2.BLUE_GATE_INTAKE_ANGLE)
+            .build();
 
-        Action gate_return = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_GATE_INTAKE, Math.toRadians(47)))
-                .setTangent(Math.toRadians(285))
-                .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), Math.toRadians(47))
+        Action gate_return3 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_GATE_INTAKE, FCV2.BLUE_GATE_INTAKE_ANGLE))
+            .setTangent(Math.toRadians(285))
+            .splineToLinearHeading(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE), FCV2.BLUE_GATE_INTAKE_ANGLE)
 
-                .build();
-
+            .build();
 
         Action artifact3 = drive.getDrive().actionBuilder(new Pose2d(FCV2.BLUE_CLOSE_SHOOT.x, FCV2.BLUE_CLOSE_SHOOT.y, FCV2.BLUE_CLOSE_ANGLE))
-                .strafeToLinearHeading(new Vector2d(FCV2.GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
-                .strafeTo(FCV2.GPP_BLUE_ARTIFACT)
+            .strafeToLinearHeading(new Vector2d(FCV2.GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y-27), FCV2.BLUE_ARTIFACT_ANGLE)
+            .strafeTo(FCV2.GPP_BLUE_ARTIFACT)
 
-                .build();
+            .build();
 
         Action artifact3_return = drive.getDrive().actionBuilder(new Pose2d(FCV2.GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y, FCV2.BLUE_ARTIFACT_ANGLE))
 
-                //                .setReversed(true)
-                .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
+            .strafeToLinearHeading(FCV2.BLUE_CLOSE_SHOOT, FCV2.BLUE_CLOSE_ANGLE)
 
-                .build();
+            .build();
 
         Action park = drive.getDrive().actionBuilder(new Pose2d(FCV2.GPP_BLUE_ARTIFACT.x, FCV2.GPP_BLUE_ARTIFACT.y+FCV2.ARTIFACT_DIST, FCV2.BLUE_CLOSE_ANGLE))
-                .strafeTo(new Vector2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y-5))
-                .build();
+            .strafeTo(new Vector2d(FCV2.PGP_BLUE_ARTIFACT.x, FCV2.PGP_BLUE_ARTIFACT.y-5))
+            .build();
 
         drive.runAction(
                 new SequentialAction(

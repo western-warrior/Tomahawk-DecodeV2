@@ -40,6 +40,7 @@ public class AutoLock extends LinearOpMode {
         while (opModeIsActive()) {
             drive.localizer.update();
             turret.autoAlign(drive.localizer.getPose());
+            turret.update();
 
 //            currentAngle = (((encoder.getVoltage() / 3.3 * 360) % 360) - 180) - initialAngle;
 //            targetAngle = turret.autoAlign(drive.localizer.getPose());
