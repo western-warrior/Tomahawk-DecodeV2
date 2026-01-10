@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -25,24 +26,24 @@ public class Intake {
     private final Telemetry telemetry;
 
     // Optional: pass telemetry if you want dashboard/logs
-    public Intake(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Intake(LinearOpMode mode, Telemetry telemetry) {
         this.telemetry = telemetry;
 
         // Initialize motor
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
+        intakeMotor = mode.hardwareMap.get(DcMotorEx.class, "intake");
         intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize motor
-        transfer = hardwareMap.get(DcMotorEx.class, "transfer");
+        transfer = mode.hardwareMap.get(DcMotorEx.class, "transfer");
         transfer.setDirection(DcMotorEx.Direction.REVERSE);
         transfer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
     // Overloaded constructor if telemetry is not needed
-    public Intake(HardwareMap hardwareMap) {
-        this(hardwareMap, null);
+    public Intake(LinearOpMode mode) {
+        this(mode, mode.telemetry);
     }
 
     // Motor controls

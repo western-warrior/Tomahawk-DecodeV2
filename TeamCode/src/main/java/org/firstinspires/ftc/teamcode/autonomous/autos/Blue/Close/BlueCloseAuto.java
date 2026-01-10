@@ -28,7 +28,7 @@ public class BlueCloseAuto extends LinearOpMode implements FieldConstants {
 
     public void runOpMode() throws InterruptedException {
 
-        Robot robot = new Robot(hardwareMap, null);
+        Robot robot = new Robot(this, null);
         BotActions botActions = new BotActions(robot);
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, BLUE_CLOSE_START);

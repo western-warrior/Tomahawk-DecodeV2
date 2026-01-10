@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.PoseStorage;
@@ -21,13 +22,13 @@ public class Robot {
 
     public Turret turret;
     public MecanumDrive drive;
-    public Robot(HardwareMap hwMap, GamepadMappings controls) {
-        driveTrain = new DriveTrain(hwMap);
-        intake = new Intake(hwMap);
-        turret = new Turret(hwMap);
-        outtake = new Outtake(hwMap);
-        transfer = new Intake(hwMap);
-        drive = new MecanumDrive(hwMap, new Pose2d(0, 0, 0));
+    public Robot(LinearOpMode mode) {
+        driveTrain = new DriveTrain(mode);
+        intake = new Intake(mode);
+        turret = new Turret(mode);
+        outtake = new Outtake(mode);
+        transfer = new Intake(mode);
+        drive = new MecanumDrive(mode.hardwareMap, new Pose2d(0, 0, 0));
     }
 
 }

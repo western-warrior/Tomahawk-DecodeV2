@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -39,10 +40,11 @@ public class Outtake {
     public double autoVelo;
     public double currentHoodPos;
 
-    public Outtake(HardwareMap hardwareMap) {
-        motor1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
-        motor2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
-        hood = hardwareMap.get(Servo.class, "hood");
+    public Outtake(LinearOpMode mode) {
+        this.telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), mode.telemetry);
+        motor1 = mode.hardwareMap.get(DcMotorEx.class, "flywheel1");
+        motor2 = mode.hardwareMap.get(DcMotorEx.class, "flywheel2");
+        hood = mode.hardwareMap.get(Servo.class, "hood");
 
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -24,7 +24,7 @@ public class AutoLockV2 extends LinearOpMode {
         SET_AS_BLUE.set();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Turret turret = new Turret(hardwareMap);
+        Turret turret = new Turret(this);
         CRServo left = hardwareMap.get(CRServo.class, "turretLeft");
         CRServo right = hardwareMap.get(CRServo.class, "turretRight");
         AnalogInput servoEncoder = hardwareMap.get(AnalogInput.class, "turretEncoderLeft");

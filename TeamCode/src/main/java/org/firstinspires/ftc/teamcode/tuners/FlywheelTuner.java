@@ -31,8 +31,8 @@ public class FlywheelTuner extends LinearOpMode {
     MecanumDrive drive;
 
     public void runOpMode() {
-        flywheel = new Outtake(hardwareMap);
-        intake = new Intake(hardwareMap);
+        flywheel = new Outtake(this);
+        intake = new Intake(this);
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //        flywheel.hood.setDirection(Servo.Direction.REVERSE);

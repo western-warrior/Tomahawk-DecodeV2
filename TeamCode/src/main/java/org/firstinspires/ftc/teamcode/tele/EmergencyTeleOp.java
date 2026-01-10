@@ -10,20 +10,16 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 @TeleOp
 public class EmergencyTeleOp extends LinearOpMode {
 
-    private GamepadMappings controls;
-    private EmergencyFSM fsm;
-    private Robot robot;
-
     @Override
     public void runOpMode() throws InterruptedException {
         // Initialize controls first
-        controls = new GamepadMappings(gamepad1, gamepad2);
+        GamepadMappings controls = new GamepadMappings(gamepad1, gamepad2);
 
         // Initialize Robot before FSM!
-        robot = new Robot(hardwareMap, controls);
+        Robot robot = new Robot(this);
 
         // Initialize FSM with fully constructed Robot
-            fsm = new EmergencyFSM(telemetry, controls, robot);
+        EmergencyFSM fsm = new EmergencyFSM(telemetry, controls, robot);
 
         telemetry.addLine("Initialization complete");
         telemetry.update();

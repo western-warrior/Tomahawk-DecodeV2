@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,15 +20,15 @@ public class DriveTrain {
 
     public State s = State.ROBOTCENTRIC;
 
-    public DriveTrain(HardwareMap hardwareMap) {
+    public DriveTrain(LinearOpMode mode) {
 
-        fl = hardwareMap.get(DcMotorEx.class, "fl");
-        fr = hardwareMap.get(DcMotorEx.class, "fr");
-        bl = hardwareMap.get(DcMotorEx.class, "bl");
-        br = hardwareMap.get(DcMotorEx.class, "br");
+        fl = mode.hardwareMap.get(DcMotorEx.class, "fl");
+        fr = mode.hardwareMap.get(DcMotorEx.class, "fr");
+        bl = mode.hardwareMap.get(DcMotorEx.class, "bl");
+        br = mode.hardwareMap.get(DcMotorEx.class, "br");
 
         // Correct IMU instantiation
-        imu = new IMUGyro(hardwareMap);
+        imu = new IMUGyro(mode.hardwareMap);
 
         DcMotorEx[] motors = new DcMotorEx[]{fl, fr, bl, br};
         DcMotorEx[] reversedMotors = new DcMotorEx[]{fl, bl};
@@ -57,6 +58,10 @@ public class DriveTrain {
             bl.setPower(blPower);
             br.setPower(brPower);
         }
+    }
+
+    public void flipState() {
+        s = (s.equals(State.ROBOTCENTRIC) ? State.FIELDCENTRIC : State.ROBOTCENTRIC);
     }
 
     public void addTelemetry() {

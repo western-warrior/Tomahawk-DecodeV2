@@ -25,7 +25,7 @@ public class AutoLock extends LinearOpMode {
 
         CRServo left = hardwareMap.get(CRServo.class, "turretLeft");
         CRServo right = hardwareMap.get(CRServo.class, "turretRight");
-        Turret turret = new Turret(hardwareMap);
+        Turret turret = new Turret(this);
         AnalogInput encoder = hardwareMap.get(AnalogInput.class, "turretEncoderRight");
         MecanumDrive drive = new MecanumDrive(this.hardwareMap, new Pose2d(0, 0, 0));
 
@@ -39,31 +39,34 @@ public class AutoLock extends LinearOpMode {
 
         while (opModeIsActive()) {
             drive.localizer.update();
+            turret.autoAlign(drive.localizer.getPose());
 
-            currentAngle = (((encoder.getVoltage() / 3.3 * 360) % 360) - 180) - initialAngle;
-            targetAngle = turret.autoAlign(drive.localizer.getPose());
-            targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle;
+//            currentAngle = (((encoder.getVoltage() / 3.3 * 360) % 360) - 180) - initialAngle;
+//            targetAngle = turret.autoAlign(drive.localizer.getPose());
+//            targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle;
+//
+//            error = (targetAngle - currentAngle) % 360;
+//            power = 0.2 * Math.log(1+Math.abs(error)) / Math.log(10);
+//
+//            if (Math.abs(error) < 4 || Math.abs(Math.abs(error) - 360) < 4) {
+//                power = 0;
+//            } else {
+//                if ((error < 0)) {
+//                    //go clockwise
+//                    power = -power;
+//                }
+//            }
+//
+//            if (enabled) left.setPower(power); else left.setPower(0);
+//            if (enabled) right.setPower(power); else right.setPower(0);
 
-            error = (targetAngle - currentAngle) % 360;
-            power = 0.2 * Math.log(1+Math.abs(error)) / Math.log(10);
 
-            if (Math.abs(error) < 4 || Math.abs(Math.abs(error) - 360) < 4) {
-                power = 0;
-            } else {
-                if ((error < 0)) {
-                    //go clockwise
-                    power = -power;
-                }
-            }
 
-            if (enabled) left.setPower(power); else left.setPower(0);
-            if (enabled) right.setPower(power); else right.setPower(0);
-
-            telemetry.addData("Current Angle", currentAngle);
-            telemetry.addData("Initial Angle", initialAngle);
-            telemetry.addData("Target Angle", targetAngle);
-            telemetry.addData("Error", error);
-            telemetry.addData("Power", power);
+            telemetry.addData("Current Angle", turret.getCurrentAngle());
+            telemetry.addData("Initial Angle", 0);
+            telemetry.addData("Target Angle", turret.getTargetAngle());
+            telemetry.addData("Error", turret.getError());
+            telemetry.addData("Power", turret.getPower());
             telemetry.addData("Rotation", Math.toDegrees(drive.localizer.getPose().heading.toDouble()));
             telemetry.addData("X", drive.localizer.getPose().position.x);
             telemetry.addData("Y", drive.localizer.getPose().position.y);
