@@ -28,7 +28,7 @@ public class RedCloseAuto extends LinearOpMode implements FieldConstants {
 
     public void runOpMode() throws InterruptedException {
 
-        Robot robot = new Robot(this, null);
+        Robot robot = new Robot(this);
         BotActions botActions = new BotActions(robot);
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, RED_CLOSE_START);

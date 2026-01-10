@@ -30,7 +30,7 @@ public class Red12Auto extends LinearOpMode implements FCV2 {
 
     public void runOpMode() throws InterruptedException {
 
-        Robot robot = new Robot(this, null);
+        Robot robot = new Robot(this);
         BotActions botActions = new BotActions(robot);
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, RED_CLOSE_START);
