@@ -1,15 +1,11 @@
 package org.firstinspires.ftc.teamcode.tele;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.fsm.EmergencyFSM;
 import org.firstinspires.ftc.teamcode.gamepad.GamepadMappings;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake.RTPAxon;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake.RTPAxon;
 
 @TeleOp
 public class EmergencyTeleOp extends LinearOpMode {
